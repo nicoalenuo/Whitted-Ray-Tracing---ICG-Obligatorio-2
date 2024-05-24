@@ -1,0 +1,13 @@
+.vs/
+*.log
+*.iobj
+*.user
+*.pdb
+*.ipdb
+*.ilk
+WhittedRayTracing/Debug/
+WhittedRayTracing/Release/
+Release/*.exe
+Debug/*.exe
+x64/
+WhittedRayTracing/x64/
