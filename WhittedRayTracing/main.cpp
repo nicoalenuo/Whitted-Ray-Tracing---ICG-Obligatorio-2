@@ -1,8 +1,16 @@
+#include "lib/controladores/ControladorRender.h"
+#include "lib/controladores/ControladorArchivos.h"
+
 #include <iostream>
 
-using namespace std;
+int main(int argc, char* argv[]) {
+	ControladorRender* controlador_render = ControladorRender::getInstance();
+	ControladorArchivos* controlador_archivos = ControladorArchivos::getInstance();
 
-int main() {
-	cout << "funciona" << endl;
+	std::cout << "funciona" << std::endl;
+
+	delete controlador_render;
+	delete controlador_archivos;
+
 	return 0;
 }

@@ -128,6 +128,29 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="src\controladores\ControladorArchivos.cpp" />
+    <ClCompile Include="src\controladores\ControladorRender.cpp" />
+    <ClCompile Include="src\imagen.cpp" />
+    <ClCompile Include="src\objetos\cilindro.cpp" />
+    <ClCompile Include="src\objetos\esfera.cpp" />
+    <ClCompile Include="src\objetos\objeto.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="constantes\coeficientes_refraccion.h" />
+    <ClInclude Include="constantes\constantes.h" />
+    <ClInclude Include="constantes\direcciones_archivos.h" />
+    <ClInclude Include="constantes\estructuras.h" />
+    <ClInclude Include="constantes\parametros.h" />
+    <ClInclude Include="lib\controladores\ControladorArchivos.h" />
+    <ClInclude Include="lib\controladores\ControladorRender.h" />
+    <ClInclude Include="lib\imagen.h" />
+    <ClInclude Include="lib\objetos\cilindro.h" />
+    <ClInclude Include="lib\objetos\esfera.h" />
+    <ClInclude Include="lib\objetos\objeto.h" />
+    <ClInclude Include="lib\tinyxml2.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Xml Include="xmls\configuracion_inicial.xml" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
