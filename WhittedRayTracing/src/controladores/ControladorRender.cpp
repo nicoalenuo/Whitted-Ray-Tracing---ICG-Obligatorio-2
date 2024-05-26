@@ -21,7 +21,6 @@ imagen* ControladorRender::whitted_ray_tracing() {
 
 	/*
 	Ray tracing potente
-	Recordar normalizar todos los rayossss. Luego de obtener cada rayo, llamar a rayo.normalizar()
 	*/
 
 	return img_resultado;
