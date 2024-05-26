@@ -24,10 +24,12 @@ private:
 
 	vector<objeto*> objetos;
 	vector<luz*> luces;
-	camara* camara;
+	camara* Camara;
 public:
 	static ControladorEscena* getInstance();
 	~ControladorEscena();
+
+	camara* getCamara() { return Camara; };
 };
 
 #endif
