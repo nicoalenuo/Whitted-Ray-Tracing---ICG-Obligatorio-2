@@ -137,7 +137,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp" />
+    <ClCompile Include="..\main.cpp" />
     <ClCompile Include="src\camara.cpp" />
     <ClCompile Include="src\controladores\ControladorEscena.cpp" />
     <ClCompile Include="src\controladores\ControladorArchivos.cpp" />

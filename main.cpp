@@ -1,6 +1,6 @@
-#include "lib/controladores/ControladorRender.h"
-#include "lib/controladores/ControladorArchivos.h"
-#include "lib/controladores/ControladorEscena.h"
+#include "WhittedRayTracing/lib/controladores/ControladorRender.h"
+#include "WhittedRayTracing/lib/controladores/ControladorArchivos.h"
+#include "WhittedRayTracing/lib/controladores/ControladorEscena.h"
 
 #include <iostream>
 
