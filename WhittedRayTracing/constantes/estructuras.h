@@ -4,10 +4,10 @@
 #define ESTRUCTURAS_H
 
 struct color {
-	int r;
-	int g;
-	int b;
-	int a;
+	double r;
+	double g;
+	double b;
+	double a;
 };
 
 #endif

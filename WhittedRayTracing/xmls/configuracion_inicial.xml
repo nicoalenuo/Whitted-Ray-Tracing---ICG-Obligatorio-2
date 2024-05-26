@@ -1,11 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
 <configuracion>
 	<camara>
+		<posicion>
+			<x>0</x>
+			<y>0</y>
+			<z>-500</z>
+		</posicion>
+		<plano_imagen>
+			<x>0</x>
+			<y>0</y>
+			<z>0</z>
+		</plano_imagen>
 	</camara>
 
 	<luces>
+		<luz>
+			<posicion>
+				<x>0</x>
+				<y>100</y>
+				<z>100</z>
+			</posicion>
+		</luz>
+		<luz>
+			<posicion>
+				<x>0</x>
+				<y>100</y>
+				<z>150</z>
+			</posicion>
+		</luz>
 	</luces>
 	
 	<objetos>
+		<esferas>
+			<esfera>
+				
+			</esfera>
+		</esferas>
+		<cilindros>
+			<cilindro>
+				
+			</cilindro>
+		</cilindros>
+		<meshes>
+			<mesh>
+				
+			</mesh>
+		</meshes>
 	</objetos>
 </configuracion>

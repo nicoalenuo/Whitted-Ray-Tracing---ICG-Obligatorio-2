@@ -3,6 +3,8 @@
 #ifndef CONTROLADOR_RENDER_H
 #define CONTROLADOR_RENDER_H
 
+#include "../imagen.h"
+
 class ControladorRender{
 private:
 	static ControladorRender* instancia;
@@ -10,7 +12,9 @@ private:
 
 public:
 	static ControladorRender* getInstance();
+	~ControladorRender();
 
+	imagen* whitted_ray_tracing();
 };
 
 #endif
