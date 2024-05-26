@@ -19,8 +19,9 @@ ControladorRender* ControladorRender::getInstance() {
 imagen* ControladorRender::whitted_ray_tracing() {
 	imagen* img_resultado = new imagen();
 
-	/* 
+	/*
 	Ray tracing potente
+	Recordar normalizar todos los rayossss. Luego de obtener cada rayo, llamar a rayo.normalizar()
 	*/
 
 	return img_resultado;

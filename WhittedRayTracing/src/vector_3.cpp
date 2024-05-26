@@ -48,6 +48,10 @@ vector_3 vector_3::operator/(float t) {
 	);
 }
 
+float vector_3::producto_interno(vector_3 v) {
+	return x * v.get_x() + y * v.get_y() + z * v.get_z();
+}
+
 vector_3 vector_3::normalizado() {
 	return vector_3(
 		x / norma(),

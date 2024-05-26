@@ -17,17 +17,17 @@ ControladorArchivos::~ControladorArchivos() {
 }
 
 void ControladorArchivos::cargar_xml(vector<objeto*>& objetos_out, vector<luz*>& luces_out, camara*& camara_out) {
-	objetos_out = cargar_objetos();
-	luces_out = cargar_luces();
-	camara_out = cargar_camara();
-}
-
-vector<objeto*> ControladorArchivos::cargar_objetos() {
-	vector <objeto*> objetos;
-
 	tinyxml2::XMLDocument configuracion_xml;
 	configuracion_xml.LoadFile(DIRECCION_CONFIGURACION_XML.c_str());
 	tinyxml2::XMLElement* configuracion = configuracion_xml.RootElement();
+
+	objetos_out = cargar_objetos(configuracion);
+	luces_out = cargar_luces(configuracion);
+	camara_out = cargar_camara(configuracion);
+}
+
+vector<objeto*> ControladorArchivos::cargar_objetos(tinyxml2::XMLElement* configuracion) {
+	vector <objeto*> objetos;
 
 	if (configuracion == NULL) {
 		cerr << "Error al cargar los objetos" << endl;
@@ -43,15 +43,25 @@ vector<objeto*> ControladorArchivos::cargar_objetos() {
 		exit(1);
 	}
 
+	float pos_x, pos_y, pos_z;
+	float radio;
+	float altura;
+
 	//Carga de esferas 
 	//----------------
 
 	tinyxml2::XMLElement* esfera_xml = esferas_xml->FirstChildElement("esfera");
 	while (esfera_xml) {
-		//Crear objeto con propiedades de objeto_xml
-		//Agregarlo a objetos
+		esfera_xml->FirstChildElement("posicion")->FirstChildElement("x")->QueryFloatText(&pos_x);
+		esfera_xml->FirstChildElement("posicion")->FirstChildElement("y")->QueryFloatText(&pos_y);
+		esfera_xml->FirstChildElement("posicion")->FirstChildElement("z")->QueryFloatText(&pos_z);
+		esfera_xml->FirstChildElement("radio")->QueryFloatText(&radio);
 
-		esfera_xml = esfera_xml->NextSiblingElement("objeto");
+		objetos.push_back(new esfera(
+			vector_3(pos_x, pos_y, pos_z),
+			radio
+		));
+		esfera_xml = esfera_xml->NextSiblingElement("esfera");
 	}
 
 	//Carga de cilindros 
@@ -59,8 +69,17 @@ vector<objeto*> ControladorArchivos::cargar_objetos() {
 
 	tinyxml2::XMLElement* cilindro_xml = cilindros_xml->FirstChildElement("cilindro");
 	while (cilindro_xml) {
-		//Crear objeto con propiedades de objeto_xml
-		//Agregarlo a objetos
+		cilindro_xml->FirstChildElement("posicion")->FirstChildElement("x")->QueryFloatText(&pos_x);
+		cilindro_xml->FirstChildElement("posicion")->FirstChildElement("y")->QueryFloatText(&pos_y);
+		cilindro_xml->FirstChildElement("posicion")->FirstChildElement("z")->QueryFloatText(&pos_z);
+		cilindro_xml->FirstChildElement("radio")->QueryFloatText(&radio);
+		cilindro_xml->FirstChildElement("altura")->QueryFloatText(&altura);
+
+		objetos.push_back(new cilindro(
+			vector_3(pos_x, pos_y, pos_z),
+			radio,
+			altura
+		));
 
 		cilindro_xml = cilindro_xml->NextSiblingElement("cilindro");
 	}
@@ -79,12 +98,8 @@ vector<objeto*> ControladorArchivos::cargar_objetos() {
 	return objetos;
 }
 
-vector<luz*> ControladorArchivos::cargar_luces() {
+vector<luz*> ControladorArchivos::cargar_luces(tinyxml2::XMLElement* configuracion) {
 	vector <luz*> luces;
-
-	tinyxml2::XMLDocument configuracion_xml;
-	configuracion_xml.LoadFile(DIRECCION_CONFIGURACION_XML.c_str());
-	tinyxml2::XMLElement* configuracion = configuracion_xml.RootElement();
 
 	if (configuracion == NULL) {
 		cerr << "Error al cargar las luces" << endl;
@@ -109,13 +124,7 @@ vector<luz*> ControladorArchivos::cargar_luces() {
 	return luces;
 }
 
-camara* ControladorArchivos::cargar_camara() {
-	camara* camara_out = new camara(vector_3(), vector_3());
-
-	tinyxml2::XMLDocument configuracion_xml;
-	configuracion_xml.LoadFile(DIRECCION_CONFIGURACION_XML.c_str());
-	tinyxml2::XMLElement* configuracion = configuracion_xml.RootElement();
-
+camara* ControladorArchivos::cargar_camara(tinyxml2::XMLElement* configuracion) {
 	if (configuracion == NULL) {
 		cerr << "Error al cargar la camara" << endl;
 		exit(1);
@@ -128,39 +137,60 @@ camara* ControladorArchivos::cargar_camara() {
 		exit(1);
 	}
 
-	//Crear camara con propiedades de camara_xml
+	float pos_x, pos_y, pos_z, pos_x_imagen, pos_y_imagen, pos_z_imagen;
 
-	return camara_out;
+	camara_xml->FirstChildElement("posicion_camara")->FirstChildElement("x")->QueryFloatText(&pos_x);
+	camara_xml->FirstChildElement("posicion_camara")->FirstChildElement("y")->QueryFloatText(&pos_y);
+	camara_xml->FirstChildElement("posicion_camara")->FirstChildElement("z")->QueryFloatText(&pos_z);
+
+	camara_xml->FirstChildElement("posicion_imagen")->FirstChildElement("x")->QueryFloatText(&pos_x_imagen);
+	camara_xml->FirstChildElement("posicion_imagen")->FirstChildElement("y")->QueryFloatText(&pos_y_imagen);
+	camara_xml->FirstChildElement("posicion_imagen")->FirstChildElement("z")->QueryFloatText(&pos_z_imagen);
+
+	return new camara(
+		vector_3(
+			pos_x,
+			pos_y,
+			pos_z
+		),
+		vector_3(
+			pos_x_imagen,
+			pos_y_imagen,
+			pos_z_imagen
+		)
+	);
 }
 
-
 bool ControladorArchivos::guardar_resultado(imagen* img_resultado) {
+	time_t in_time_t = chrono::system_clock::to_time_t(chrono::system_clock::now());
+	tm buf;
+	localtime_s(&buf, &in_time_t);
+	ostringstream oss;
+	oss << put_time(&buf, "%d %B - %H-%M-%S");
+	string direccion = DIRECCION_RESULTADOS + oss.str();
+
 	bool resultado;
 
-	time_t rawtime;
-	struct tm timeinfo;
-	char buffer[80];
-
-	time(&rawtime);
-	localtime_s(&timeinfo, &rawtime);
-
-	strftime(buffer, sizeof(buffer), "%Y-%m-%d_%H-%M-%S", &timeinfo);
-	string str(buffer);
-
-	str = DIRECCION_RESULTADOS + str;
-	if (CreateDirectoryW(wstring(str.begin(), str.end()).c_str(), NULL) == 0) {
+	// Crear el directorio
+	if (!filesystem::create_directory(direccion)) {
+		cerr << "Error al crear el directorio: " << direccion << endl;
 		return false;
 	}
 
-	str = str + "\\resultado.png";
+	direccion += "\\resultado.png";
 
 	FIBITMAP* bitmap = img_resultado->float_to_bitmap();
-
-	cout << "Guardado en : " << str << endl;
-
-	resultado = FreeImage_Save(FIF_PNG, bitmap, str.c_str(), 0);
-
+	resultado = FreeImage_Save(FIF_PNG, bitmap, direccion.c_str(), 0);
 	FreeImage_Unload(bitmap);
+
+	if (!resultado) {
+		cerr << "Error al guardar la imagen en: " << direccion << endl;
+	}
+	else {
+		cout << "Guardado en: " << direccion << endl;
+	}
 
 	return resultado;
 }
+
+

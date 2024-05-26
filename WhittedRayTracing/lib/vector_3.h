@@ -4,6 +4,9 @@
 #define VECTOR_3_H
 
 #include <cmath>
+#include <iostream>
+
+using namespace std;
 
 class vector_3 {
 private:
@@ -22,6 +25,7 @@ public:
 	vector_3 operator*(float t);
 	vector_3 operator/(float t);
 	vector_3 operator-(void);
+	float producto_interno(vector_3);
 
 	vector_3 normalizado();
 	float norma();

@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <configuracion>
 	<camara>
-		<posicion>
+		<posicion_camara>
 			<x>0</x>
 			<y>0</y>
 			<z>-500</z>
-		</posicion>
-		<plano_imagen>
+		</posicion_camara>
+		<posicion_imagen>
 			<x>0</x>
 			<y>0</y>
 			<z>0</z>
-		</plano_imagen>
+		</posicion_imagen>
 	</camara>
 
 	<luces>
@@ -33,12 +33,31 @@
 	<objetos>
 		<esferas>
 			<esfera>
-				
+				<posicion>
+					<x>0</x>
+					<y>0</y>
+					<z>50</z>
+				</posicion>
+				<radio>10</radio>
+			</esfera>
+			<esfera>
+				<posicion>
+					<x>0</x>
+					<y>50</y>
+					<z>50</z>
+				</posicion>
+				<radio>10</radio>
 			</esfera>
 		</esferas>
 		<cilindros>
 			<cilindro>
-				
+				<posicion>
+					<x>0</x>
+					<y>0</y>
+					<z>10</z>
+				</posicion>
+				<radio>5</radio>
+				<altura>5</altura>
 			</cilindro>
 		</cilindros>
 		<meshes>

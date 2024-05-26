@@ -5,13 +5,16 @@
 
 #include <vector>
 #include <iostream>
-#include <windows.h>
+#include <filesystem>
+#include <chrono>
 
 #include "../objetos/objeto.h"
 #include "../imagen.h"
 #include "../camara.h"
 #include "../luz.h"
 #include "../../constantes/constantes.h"
+#include "../objetos/esfera.h"
+#include "../objetos/cilindro.h"
 #include "../tinyxml2.h"
 
 using namespace std;
@@ -21,9 +24,9 @@ private:
 	static ControladorArchivos* instancia;
 	ControladorArchivos();
 
-	vector<objeto*> cargar_objetos();
-	vector<luz*> cargar_luces();
-	camara* cargar_camara();
+	vector<objeto*> cargar_objetos(tinyxml2::XMLElement* configuracion);
+	vector<luz*> cargar_luces(tinyxml2::XMLElement* configuracion);
+	camara* cargar_camara(tinyxml2::XMLElement* configuracion);
 public:
 	static ControladorArchivos* getInstance();
 	~ControladorArchivos();
