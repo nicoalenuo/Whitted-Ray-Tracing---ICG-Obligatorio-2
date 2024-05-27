@@ -6,6 +6,9 @@
 const int IMAGEN_WIDTH = 1280;
 const int IMAGEN_HEIGHT = 720;
 
+const int HALF_IMAGE_WIDTH = 640;
+const int HALF_IMAGEN_HEIGHT = 360;
+
 const int PROFUNDIDAD_MAXIMA = 5; // Profunidad maxima en recursion de ray tracing
 const float EPSILON = 0.001f; // Para mitigar colisiones de rayos con su lugar de partida
 
