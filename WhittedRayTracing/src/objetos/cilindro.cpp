@@ -15,7 +15,7 @@ bool cilindro::interseca(rayo rayo_in, vector_3& punto_interseccion_out) {
         (rayo_in.get_origen().get_x() - posicion.get_x()) * 
         (rayo_in.get_origen().get_x() - posicion.get_x()) +
         (rayo_in.get_origen().get_z() - posicion.get_z()) *
-        (rayo_in.get_origen().get_x() - posicion.get_z()) -
+        (rayo_in.get_origen().get_z() - posicion.get_z()) -
         (radio * radio);
 
     float delta = b * b - 4 * (a * c);

@@ -16,13 +16,22 @@ ControladorRender* ControladorRender::getInstance() {
 	return instancia;
 }
 
-color ControladorRender::traza_rr(rayo* rayo, int profundidad) {
+color ControladorRender::traza_rr(rayo* Rayo, int profundidad) {
 
-	if (profundidad > MAX_DEPTH) {
-		return {0., 0., 0., 1.};
+	objeto* objeto;
+	vector_3 punto_interseca;
+
+	if (profundidad > PROFUNDIDAD_MAXIMA) {
+		return {0., 0., 0., 1.}; //Negro
 	}
 	
-	return { 255., 255., 255., 1. };
+	if (ControladorEscena::getInstance()->obtener_objeto_intersecado_mas_cercano(rayo(Rayo->get_origen(), Rayo->get_direccion()), objeto, punto_interseca)) {
+		return { 255., 255., 255., 1. }; //Blanco
+	}
+	else {
+		return { 0., 0., 0., 1. }; //Negro
+	}
+	
 
 }
 
@@ -30,7 +39,7 @@ color ControladorRender::traza_rr(rayo* rayo, int profundidad) {
 imagen* ControladorRender::whitted_ray_tracing() {
 	imagen* img_resultado = new imagen();
 
-	camara* camara = ControladorEscena::getInstance()->getCamara();
+	camara* camara = ControladorEscena::getInstance()->get_camara();
 	vector_3 origen = camara->getPosicionCamara(); //ojo de la camera
 	//vector_3 plano = camara->getDireccionCamara(); //hay que importar ademas el plano que ya se agrego en el archivo
 	vector_3 plano = vector_3(0.f, 0.f, 0.f);

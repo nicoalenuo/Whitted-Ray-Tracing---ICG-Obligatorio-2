@@ -52,12 +52,12 @@
 		<cilindros>
 			<cilindro>
 				<posicion>
-					<x>0</x>
+					<x>50</x>
 					<y>0</y>
 					<z>10</z>
 				</posicion>
-				<radio>5</radio>
-				<altura>5</altura>
+				<radio>20</radio>
+				<altura>20</altura>
 			</cilindro>
 		</cilindros>
 		<meshes>

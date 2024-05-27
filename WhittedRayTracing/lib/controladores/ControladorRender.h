@@ -15,7 +15,7 @@ private:
 	static ControladorRender* instancia;
 	ControladorRender();
 
-	color traza_rr(rayo* rayo, int profundidad);
+	color traza_rr(rayo* Rayo, int profundidad);
 
 public:
 	static ControladorRender* getInstance();
