@@ -16,6 +16,7 @@ private:
 	ControladorRender();
 
 	color traza_rr(rayo* Rayo, int profundidad);
+	color sombra_rr(objeto* objeto, rayo* Rayo, vector_3 punto_interseca, vector_3 normal, int profundidad);
 
 public:
 	static ControladorRender* getInstance();

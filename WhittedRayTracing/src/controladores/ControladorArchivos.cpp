@@ -113,10 +113,27 @@ vector<luz*> ControladorArchivos::cargar_luces(tinyxml2::XMLElement* configuraci
 		exit(1);
 	}
 
+	float pos_x, pos_y, pos_z;
+	double color_r, color_g, color_b, color_a;
+
 	tinyxml2::XMLElement* luz_xml = luces_xml->FirstChildElement("luz");
 	while (luz_xml) {
 		//Crear objeto con propiedades de luz_xml
 		//Agregarlo a luces
+
+		luz_xml->FirstChildElement("posicion")->FirstChildElement("x")->QueryFloatText(&pos_x);
+		luz_xml->FirstChildElement("posicion")->FirstChildElement("y")->QueryFloatText(&pos_y);
+		luz_xml->FirstChildElement("posicion")->FirstChildElement("z")->QueryFloatText(&pos_z);
+
+		luz_xml->FirstChildElement("color")->FirstChildElement("r")->QueryDoubleText(&color_r);
+		luz_xml->FirstChildElement("color")->FirstChildElement("g")->QueryDoubleText(&color_g);
+		luz_xml->FirstChildElement("color")->FirstChildElement("b")->QueryDoubleText(&color_b);
+		luz_xml->FirstChildElement("color")->FirstChildElement("a")->QueryDoubleText(&color_a);
+
+		luces.push_back(new luz(
+			vector_3(pos_x, pos_y, pos_z),
+			{ color_r, color_g, color_b, color_a }
+		));
 
 		luz_xml = luz_xml->NextSiblingElement("luz");
 	}

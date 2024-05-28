@@ -17,16 +17,28 @@
 		<luz>
 			<posicion>
 				<x>0</x>
-				<y>100</y>
-				<z>100</z>
+				<y>150</y>
+				<z>150</z>
 			</posicion>
+			<color>
+				<r>1</r>
+				<g>1</g>
+				<b>1</b>
+				<a>1</a>
+			</color>
 		</luz>
 		<luz>
 			<posicion>
 				<x>0</x>
-				<y>100</y>
-				<z>150</z>
+				<y>150</y>
+				<z>250</z>
 			</posicion>
+			<color>
+				<r>1</r>
+				<g>1</g>
+				<b>1</b>
+				<a>1</a>
+			</color>
 		</luz>
 	</luces>
 	
