@@ -147,7 +147,9 @@
     <ClCompile Include="src\luz.cpp" />
     <ClCompile Include="src\objetos\cilindro.cpp" />
     <ClCompile Include="src\objetos\esfera.cpp" />
+    <ClCompile Include="src\objetos\malla_poligonal.cpp" />
     <ClCompile Include="src\objetos\objeto.cpp" />
+    <ClCompile Include="src\objetos\poligono_triangulo.cpp" />
     <ClCompile Include="src\rayo.cpp" />
     <ClCompile Include="src\tinyxml2.cpp" />
     <ClCompile Include="src\vector_3.cpp" />
@@ -166,7 +168,9 @@
     <ClInclude Include="lib\luz.h" />
     <ClInclude Include="lib\objetos\cilindro.h" />
     <ClInclude Include="lib\objetos\esfera.h" />
+    <ClInclude Include="lib\objetos\malla_poligonal.h" />
     <ClInclude Include="lib\objetos\objeto.h" />
+    <ClInclude Include="lib\objetos\poligono_triangulo.h" />
     <ClInclude Include="lib\rayo.h" />
     <ClInclude Include="lib\tinyxml2.h" />
     <ClInclude Include="lib\vector_3.h" />

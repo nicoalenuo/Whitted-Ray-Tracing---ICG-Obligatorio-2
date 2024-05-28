@@ -60,10 +60,45 @@
 				<altura>20</altura>
 			</cilindro>
 		</cilindros>
-		<meshes>
-			<mesh>
-				
-			</mesh>
-		</meshes>
+		<mallas_poligonales>
+			<malla_poligonal>
+				<triangulos>
+					<triangulo>
+						<coord>
+							<x>0</x>
+							<y>100</y>
+							<z>0</z>
+						</coord>
+						<coord>
+							<x>-50</x>
+							<y>150</y>
+							<z>-50</z>
+						</coord>
+						<coord>
+							<x>50</x>
+							<y>150</y>
+							<z>-50</z>
+						</coord>
+					</triangulo>
+					<triangulo>
+						<coord>
+							<x>0</x>
+							<y>100</y>
+							<z>0</z>
+						</coord>
+						<coord>
+							<x>-50</x>
+							<y>150</y>
+							<z>-50</z>
+						</coord>
+						<coord>
+							<x>50</x>
+							<y>150</y>
+							<z>50</z>
+						</coord>
+					</triangulo>
+				</triangulos>
+			</malla_poligonal>
+		</mallas_poligonales>
 	</objetos>
 </configuracion>

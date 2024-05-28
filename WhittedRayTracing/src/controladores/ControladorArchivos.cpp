@@ -21,6 +21,11 @@ void ControladorArchivos::cargar_xml(vector<objeto*>& objetos_out, vector<luz*>&
 	configuracion_xml.LoadFile(DIRECCION_CONFIGURACION_XML.c_str());
 	tinyxml2::XMLElement* configuracion = configuracion_xml.RootElement();
 
+	if (configuracion == NULL) {
+		cerr << "Error al cargar el archivo de configuracion" << endl;
+		exit(1);
+	}
+
 	objetos_out = cargar_objetos(configuracion);
 	luces_out = cargar_luces(configuracion);
 	camara_out = cargar_camara(configuracion);
@@ -29,16 +34,11 @@ void ControladorArchivos::cargar_xml(vector<objeto*>& objetos_out, vector<luz*>&
 vector<objeto*> ControladorArchivos::cargar_objetos(tinyxml2::XMLElement* configuracion) {
 	vector <objeto*> objetos;
 
-	if (configuracion == NULL) {
-		cerr << "Error al cargar los objetos" << endl;
-		exit(1);
-	}
-
 	tinyxml2::XMLElement* esferas_xml = configuracion->FirstChildElement("objetos")->FirstChildElement("esferas");
 	tinyxml2::XMLElement* cilindros_xml = configuracion->FirstChildElement("objetos")->FirstChildElement("cilindros");
-	tinyxml2::XMLElement* meshes_xml = configuracion->FirstChildElement("objetos")->FirstChildElement("meshes");
+	tinyxml2::XMLElement* mallas_poligonales_xml = configuracion->FirstChildElement("objetos")->FirstChildElement("mallas_poligonales");
 
-	if (esferas_xml == NULL || cilindros_xml == NULL || meshes_xml == NULL) {
+	if (esferas_xml == NULL || cilindros_xml == NULL || mallas_poligonales_xml == NULL) {
 		cerr << "Error al cargar los objetos" << endl;
 		exit(1);
 	}
@@ -84,15 +84,38 @@ vector<objeto*> ControladorArchivos::cargar_objetos(tinyxml2::XMLElement* config
 		cilindro_xml = cilindro_xml->NextSiblingElement("cilindro");
 	}
 
-	//Carga de meshes
+	//Carga de mallas poligonales
 	//----------------
+	tinyxml2::XMLElement* malla_poligonal_xml = mallas_poligonales_xml->FirstChildElement("malla_poligonal");
+	while (malla_poligonal_xml) {
+		vector<poligono_triangulo*> poligonos;
+		tinyxml2::XMLElement* triangulos = malla_poligonal_xml->FirstChildElement("triangulos");
+		tinyxml2::XMLElement* triangulo = triangulos->FirstChildElement("triangulo");
+		while (triangulo) {
+			vector<vector_3> coordenadas;
+			tinyxml2::XMLElement* coord = triangulo->FirstChildElement("coord");
+			while (coord) {
+				coord->FirstChildElement("x")->QueryFloatText(&pos_x);
+				coord->FirstChildElement("y")->QueryFloatText(&pos_y);
+				coord->FirstChildElement("z")->QueryFloatText(&pos_z);
 
-	tinyxml2::XMLElement* mesh_xml = meshes_xml->FirstChildElement("mesh");
-	while (mesh_xml) {
-		//Crear objeto con propiedades de objeto_xml
-		//Agregarlo a objetos
+				coordenadas.push_back(vector_3(pos_x, pos_y, pos_z));
 
-		mesh_xml = mesh_xml->NextSiblingElement("mesh");
+				coord = coord->NextSiblingElement("coord");
+			}
+			poligonos.push_back(new poligono_triangulo(
+				coordenadas[0],
+				coordenadas[1],
+				coordenadas[2]
+			));
+			triangulo = triangulo->NextSiblingElement("triangulo");
+		}
+		objetos.push_back(new malla_poligonal(
+			vector_3(),
+			poligonos
+		));
+
+		malla_poligonal_xml = malla_poligonal_xml->NextSiblingElement("malla_poligonal");
 	}
 
 	return objetos;
@@ -100,11 +123,6 @@ vector<objeto*> ControladorArchivos::cargar_objetos(tinyxml2::XMLElement* config
 
 vector<luz*> ControladorArchivos::cargar_luces(tinyxml2::XMLElement* configuracion) {
 	vector <luz*> luces;
-
-	if (configuracion == NULL) {
-		cerr << "Error al cargar las luces" << endl;
-		exit(1);
-	}
 
 	tinyxml2::XMLElement* luces_xml = configuracion->FirstChildElement("luces");
 
@@ -125,11 +143,6 @@ vector<luz*> ControladorArchivos::cargar_luces(tinyxml2::XMLElement* configuraci
 }
 
 camara* ControladorArchivos::cargar_camara(tinyxml2::XMLElement* configuracion) {
-	if (configuracion == NULL) {
-		cerr << "Error al cargar la camara" << endl;
-		exit(1);
-	}
-
 	tinyxml2::XMLElement* camara_xml = configuracion->FirstChildElement("camara");
 
 	if (camara_xml == NULL) {
@@ -162,6 +175,8 @@ camara* ControladorArchivos::cargar_camara(tinyxml2::XMLElement* configuracion) 
 }
 
 bool ControladorArchivos::guardar_resultado(imagen* img_resultado) {
+	FreeImage_Initialise();
+
 	time_t in_time_t = chrono::system_clock::to_time_t(chrono::system_clock::now());
 	tm buf;
 	localtime_s(&buf, &in_time_t);
@@ -179,15 +194,16 @@ bool ControladorArchivos::guardar_resultado(imagen* img_resultado) {
 
 	direccion += "\\resultado.png";
 
-	FIBITMAP* bitmap = img_resultado->float_to_bitmap();
+	FIBITMAP* bitmap = img_resultado->obtener_bitmap();
 	resultado = FreeImage_Save(FIF_PNG, bitmap, direccion.c_str(), 0);
 	FreeImage_Unload(bitmap);
+	FreeImage_DeInitialise();
 
 	if (!resultado) {
 		cerr << "Error al guardar la imagen en: " << direccion << endl;
 	}
 	else {
-		cout << "Guardado en: " << direccion << endl;
+		cout << "Resultado guardado en: " << direccion << endl;
 	}
 
 	return resultado;

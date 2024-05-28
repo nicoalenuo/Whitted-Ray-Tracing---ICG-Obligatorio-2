@@ -38,12 +38,13 @@ imagen::~imagen() {
     delete[] pixeles;
 }
 
-FIBITMAP* imagen::float_to_bitmap() {
+FIBITMAP* imagen::obtener_bitmap() {
 	double max_intensity = 0.;
 
 	FIBITMAP* result = FreeImage_Allocate(IMAGEN_WIDTH, IMAGEN_HEIGHT, 24);
 	RGBQUAD color;
 	if (!result) {
+		FreeImage_DeInitialise();
 		cerr << "Error al guardar memoria para el bitmap" << endl;
 		exit(1);
 	}

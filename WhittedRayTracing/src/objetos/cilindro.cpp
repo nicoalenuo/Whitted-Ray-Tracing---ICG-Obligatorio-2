@@ -27,12 +27,7 @@ bool cilindro::interseca(rayo rayo_in, vector_3& punto_interseccion_out) {
     float t2 = (-b + sqrt(delta)) / (2 * a);
     float t;
 
-    if (t1 > t2) {
-        t = t2;
-    }
-    else {
-        t = t1;
-    }
+    t = t1 > t2 ? t2 : t1;
 
     float r = rayo_in.get_origen().get_y() + rayo_in.get_direccion().get_y() * t;
 

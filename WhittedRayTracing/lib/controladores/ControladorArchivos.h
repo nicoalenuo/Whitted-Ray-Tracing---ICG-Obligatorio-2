@@ -15,6 +15,7 @@
 #include "../../constantes/constantes.h"
 #include "../objetos/esfera.h"
 #include "../objetos/cilindro.h"
+#include "../objetos/malla_poligonal.h"
 #include "../tinyxml2.h"
 
 using namespace std;

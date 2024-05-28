@@ -26,9 +26,9 @@ vector_3 vector_3::operator-(void) {
 
 vector_3 vector_3::operator*(vector_3 v) {
 	return vector_3(
-		y * v.z - z * v.y,
-		z * v.x - x * v.z,
-		x * v.y - y * v.x
+		y * v.get_z() - z * v.get_y(),
+		z * v.get_x() - x * v.get_z(),
+		x * v.get_y() - y * v.get_x()
 	);
 }
 
