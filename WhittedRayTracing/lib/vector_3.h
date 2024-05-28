@@ -25,7 +25,8 @@ public:
 	vector_3 operator*(float t);
 	vector_3 operator/(float t);
 	vector_3 operator-(void);
-	float producto_interno(vector_3);
+
+	float producto_interno(vector_3 v);
 
 	vector_3 normalizado();
 	float norma();

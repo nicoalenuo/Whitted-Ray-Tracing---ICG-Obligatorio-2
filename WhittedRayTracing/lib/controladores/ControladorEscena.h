@@ -13,7 +13,6 @@
 
 #include "ControladorArchivos.h"
 
-
 using namespace std;
 
 class ControladorEscena {
@@ -29,10 +28,12 @@ public:
 	static ControladorEscena* getInstance();
 	~ControladorEscena();
 
+	vector<objeto*> get_objetos() const { return objetos; };
+	vector<luz*> get_luces() const { return luces; };
 	camara* get_camara() { return Camara; };
 	vector<luz*> get_luces() { return luces; };
 
-	//Devuelve true si intersecta con algun objeto, y si lo hace, devuelve cual y donde
+	//Devuelve true si interseca con algun objeto, y si lo hace, devuelve cual y donde
 	bool obtener_objeto_intersecado_mas_cercano(rayo rayo_in, objeto*& objeto_out, vector_3& punto_interseccion_out);
 
 };
