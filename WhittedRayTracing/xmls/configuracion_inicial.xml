@@ -51,6 +51,18 @@
 					<z>50</z>
 				</posicion>
 				<radio>10</radio>
+				<color_difuso>
+					<r>255</r>
+					<g>0</g>
+					<b>0</b>
+					<a>255</a>
+				</color_difuso>
+				<color_especular>
+					<r>255</r>
+					<g>255</g>
+					<b>255</b>
+					<a>255</a>
+				</color_especular>
 			</esfera>
 			<esfera>
 				<posicion>
@@ -59,6 +71,18 @@
 					<z>50</z>
 				</posicion>
 				<radio>10</radio>
+				<color_difuso>
+					<r>0</r>
+					<g>255</g>
+					<b>0</b>
+					<a>255</a>
+				</color_difuso>
+				<color_especular>
+					<r>255</r>
+					<g>255</g>
+					<b>255</b>
+					<a>255</a>
+				</color_especular>
 			</esfera>
 		</esferas>
 		<cilindros>
@@ -70,10 +94,34 @@
 				</posicion>
 				<radio>20</radio>
 				<altura>20</altura>
+				<color_difuso>
+					<r>255</r>
+					<g>255</g>
+					<b>0</b>
+					<a>255</a>
+				</color_difuso>
+				<color_especular>
+					<r>255</r>
+					<g>255</g>
+					<b>255</b>
+					<a>255</a>
+				</color_especular>
 			</cilindro>
 		</cilindros>
 		<mallas_poligonales>
 			<malla_poligonal>
+				<color_difuso>
+					<r>0</r>
+					<g>255</g>
+					<b>0</b>
+					<a>255</a>
+				</color_difuso>
+				<color_especular>
+					<r>255</r>
+					<g>255</g>
+					<b>255</b>
+					<a>255</a>
+				</color_especular>
 				<triangulos>
 					<triangulo>
 						<coord>

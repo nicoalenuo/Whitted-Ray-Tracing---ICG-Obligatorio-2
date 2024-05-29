@@ -46,6 +46,8 @@ vector<objeto*> ControladorArchivos::cargar_objetos(tinyxml2::XMLElement* config
 	float pos_x, pos_y, pos_z;
 	float radio;
 	float altura;
+	double difuso_r, difuso_g, difuso_b, difuso_a;
+	double especular_r, especular_g, especular_b, especular_a;
 
 	//Carga de esferas 
 	//----------------
@@ -56,10 +58,22 @@ vector<objeto*> ControladorArchivos::cargar_objetos(tinyxml2::XMLElement* config
 		esfera_xml->FirstChildElement("posicion")->FirstChildElement("y")->QueryFloatText(&pos_y);
 		esfera_xml->FirstChildElement("posicion")->FirstChildElement("z")->QueryFloatText(&pos_z);
 		esfera_xml->FirstChildElement("radio")->QueryFloatText(&radio);
+		
+		esfera_xml->FirstChildElement("color_difuso")->FirstChildElement("r")->QueryDoubleText(&difuso_r);
+		esfera_xml->FirstChildElement("color_difuso")->FirstChildElement("g")->QueryDoubleText(&difuso_g);
+		esfera_xml->FirstChildElement("color_difuso")->FirstChildElement("b")->QueryDoubleText(&difuso_b);
+		esfera_xml->FirstChildElement("color_difuso")->FirstChildElement("a")->QueryDoubleText(&difuso_a);
+		
+		esfera_xml->FirstChildElement("color_especular")->FirstChildElement("r")->QueryDoubleText(&especular_r);
+		esfera_xml->FirstChildElement("color_especular")->FirstChildElement("g")->QueryDoubleText(&especular_g);
+		esfera_xml->FirstChildElement("color_especular")->FirstChildElement("b")->QueryDoubleText(&especular_b);
+		esfera_xml->FirstChildElement("color_especular")->FirstChildElement("a")->QueryDoubleText(&especular_a);
 
 		objetos.push_back(new esfera(
 			vector_3(pos_x, pos_y, pos_z),
-			radio
+			radio,
+			{ difuso_r, difuso_g, difuso_b, difuso_a },
+			{ especular_r, especular_g, especular_b, especular_a }
 		));
 		esfera_xml = esfera_xml->NextSiblingElement("esfera");
 	}
@@ -75,10 +89,22 @@ vector<objeto*> ControladorArchivos::cargar_objetos(tinyxml2::XMLElement* config
 		cilindro_xml->FirstChildElement("radio")->QueryFloatText(&radio);
 		cilindro_xml->FirstChildElement("altura")->QueryFloatText(&altura);
 
+		cilindro_xml->FirstChildElement("color_difuso")->FirstChildElement("r")->QueryDoubleText(&difuso_r);
+		cilindro_xml->FirstChildElement("color_difuso")->FirstChildElement("g")->QueryDoubleText(&difuso_g);
+		cilindro_xml->FirstChildElement("color_difuso")->FirstChildElement("b")->QueryDoubleText(&difuso_b);
+		cilindro_xml->FirstChildElement("color_difuso")->FirstChildElement("a")->QueryDoubleText(&difuso_a);
+
+		cilindro_xml->FirstChildElement("color_especular")->FirstChildElement("r")->QueryDoubleText(&especular_r);
+		cilindro_xml->FirstChildElement("color_especular")->FirstChildElement("g")->QueryDoubleText(&especular_g);
+		cilindro_xml->FirstChildElement("color_especular")->FirstChildElement("b")->QueryDoubleText(&especular_b);
+		cilindro_xml->FirstChildElement("color_especular")->FirstChildElement("a")->QueryDoubleText(&especular_a);
+
 		objetos.push_back(new cilindro(
 			vector_3(pos_x, pos_y, pos_z),
 			radio,
-			altura
+			altura,
+			{ difuso_r, difuso_g, difuso_b, difuso_a },
+			{ especular_r, especular_g, especular_b, especular_a }
 		));
 
 		cilindro_xml = cilindro_xml->NextSiblingElement("cilindro");
@@ -88,6 +114,17 @@ vector<objeto*> ControladorArchivos::cargar_objetos(tinyxml2::XMLElement* config
 	//----------------
 	tinyxml2::XMLElement* malla_poligonal_xml = mallas_poligonales_xml->FirstChildElement("malla_poligonal");
 	while (malla_poligonal_xml) {
+		
+		malla_poligonal_xml->FirstChildElement("color_difuso")->FirstChildElement("r")->QueryDoubleText(&difuso_r);
+		malla_poligonal_xml->FirstChildElement("color_difuso")->FirstChildElement("g")->QueryDoubleText(&difuso_g);
+		malla_poligonal_xml->FirstChildElement("color_difuso")->FirstChildElement("b")->QueryDoubleText(&difuso_b);
+		malla_poligonal_xml->FirstChildElement("color_difuso")->FirstChildElement("a")->QueryDoubleText(&difuso_a);
+		
+		malla_poligonal_xml->FirstChildElement("color_especular")->FirstChildElement("r")->QueryDoubleText(&especular_r);
+		malla_poligonal_xml->FirstChildElement("color_especular")->FirstChildElement("g")->QueryDoubleText(&especular_g);
+		malla_poligonal_xml->FirstChildElement("color_especular")->FirstChildElement("b")->QueryDoubleText(&especular_b);
+		malla_poligonal_xml->FirstChildElement("color_especular")->FirstChildElement("a")->QueryDoubleText(&especular_a);
+
 		vector<poligono_triangulo*> poligonos;
 		tinyxml2::XMLElement* triangulos = malla_poligonal_xml->FirstChildElement("triangulos");
 		tinyxml2::XMLElement* triangulo = triangulos->FirstChildElement("triangulo");
@@ -112,7 +149,9 @@ vector<objeto*> ControladorArchivos::cargar_objetos(tinyxml2::XMLElement* config
 		}
 		objetos.push_back(new malla_poligonal(
 			vector_3(),
-			poligonos
+			poligonos,
+			{ difuso_r, difuso_g, difuso_b, difuso_a },
+			{ especular_r, especular_g, especular_b, especular_a }
 		));
 
 		malla_poligonal_xml = malla_poligonal_xml->NextSiblingElement("malla_poligonal");

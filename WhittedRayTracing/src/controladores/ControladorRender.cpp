@@ -34,8 +34,8 @@ color ControladorRender::sombra_rr(objeto* objeto, rayo* Rayo, vector_3 punto_in
 
 			distancia_de_la_luz = (luces[i]->get_posicion() - punto_interseca).norma();
 
-			//color = luces[i]->get_color() * objeto->get_color();
-			color = { 255.f, 0., 0., 1 };
+			color = objeto->get_color_difuso();
+			//color = { 255.f, 0., 0., 1 };
 
 		}
 
@@ -63,7 +63,6 @@ color ControladorRender::traza_rr(rayo* Rayo, int profundidad) {
 	else {
 		return { 0., 0., 0., 1. }; //Negro
 	}
-	
 
 }
 
