@@ -10,4 +10,10 @@ struct color {
 	double a;
 };
 
+//En el xml, 0 es reflectante, 1 es transparente
+enum tipo_material {
+	REFLECTANTE,
+	TRANSPARENTE
+};
+
 #endif

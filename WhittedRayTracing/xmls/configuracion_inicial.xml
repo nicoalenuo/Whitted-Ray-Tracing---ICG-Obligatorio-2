@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- En material, 0 es reflectante, 1 es transparente -->
 <configuracion>
 	<imagen>
 		<resolucion_imagen>
@@ -52,6 +53,11 @@
 	<objetos>
 		<esferas>
 			<esfera>
+				<coeficiente_ambiente>0.6</coeficiente_ambiente>
+				<coeficiente_difuso>0.3</coeficiente_difuso>
+				<coeficiente_especular>0.05</coeficiente_especular>
+				<coeficiente_transmicion>0</coeficiente_transmicion>
+				<material>0</material>
 				<posicion>
 					<x>0</x>
 					<y>0</y>
@@ -72,6 +78,11 @@
 				</color_especular>
 			</esfera>
 			<esfera>
+				<coeficiente_ambiente>0.6</coeficiente_ambiente>
+				<coeficiente_difuso>0.3</coeficiente_difuso>
+				<coeficiente_especular>0.05</coeficiente_especular>
+				<coeficiente_transmicion>0</coeficiente_transmicion>
+				<material>1</material>
 				<posicion>
 					<x>0</x>
 					<y>50</y>
@@ -94,6 +105,11 @@
 		</esferas>
 		<cilindros>
 			<cilindro>
+				<coeficiente_ambiente>0.6</coeficiente_ambiente>
+				<coeficiente_difuso>0.3</coeficiente_difuso>
+				<coeficiente_especular>0.05</coeficiente_especular>
+				<coeficiente_transmicion>0</coeficiente_transmicion>
+				<material>0</material>
 				<posicion>
 					<x>50</x>
 					<y>0</y>
@@ -117,6 +133,11 @@
 		</cilindros>
 		<mallas_poligonales>
 			<malla_poligonal>
+				<coeficiente_ambiente>0.6</coeficiente_ambiente>
+				<coeficiente_difuso>0.3</coeficiente_difuso>
+				<coeficiente_especular>0.05</coeficiente_especular>
+				<coeficiente_transmicion>0</coeficiente_transmicion>
+				<material>0</material>
 				<color_difuso>
 					<r>0</r>
 					<g>255</g>

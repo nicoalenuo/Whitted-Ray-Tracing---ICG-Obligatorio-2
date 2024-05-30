@@ -78,7 +78,7 @@ FIBITMAP* imagen::obtener_bitmap() {
 				color.rgbGreen = (BYTE)(this->pixeles[i][j].g * 255.0);
 				color.rgbBlue = (BYTE)(this->pixeles[i][j].b * 255.0);
 			}
-			FreeImage_SetPixelColor(result, j, imagen_height - 1 - i, &color);
+			FreeImage_SetPixelColor(result, j, i, &color);
 		}
 	}
 	return result;

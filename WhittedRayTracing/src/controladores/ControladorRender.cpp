@@ -50,6 +50,7 @@ color ControladorRender::traza_rr(rayo Rayo, int profundidad) {
 	objeto* objeto;
 	vector_3 punto_interseca;
 
+	//En el codigo que muestra el profe esto no se chequea aca xd tal vez se puede R E M O V E R
 	if (profundidad > PROFUNDIDAD_MAXIMA) {
 		return {0., 0., 0., 1.}; //Negro
 	}
@@ -76,7 +77,7 @@ imagen* ControladorRender::whitted_ray_tracing() {
 	vector_3 origen = camara->getPosicionCamara(); //ojo de la camera
 	vector_3 plano = vector_3(0.f, 0.f, 0.f);
 
-	#pragma omp parallel for collapse(2)
+	#pragma omp parallel for collapse(2) //para paralelizacion
 	for (int i = 0; i < imagen_height; i++) {
 		for (int j = 0; j < imagen_width; j++) {
 			rayo rayo1 = rayo(origen,

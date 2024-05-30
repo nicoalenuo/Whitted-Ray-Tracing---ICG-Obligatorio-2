@@ -14,7 +14,7 @@ public:
 
 	vector_3 get_coord_1() const { return coord_1; };
 	vector_3 get_coord_2() const { return coord_2; };
-	vector_3 get_coord_3() const { return coord_2; };
+	vector_3 get_coord_3() const { return coord_3; };
 
 	vector_3 normal();
 };

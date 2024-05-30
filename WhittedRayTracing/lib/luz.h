@@ -12,7 +12,7 @@ private:
 	color Color;
 
 public:
-	luz(vector_3 posicion, color color);
+	luz(vector_3 posicion, color Color) : posicion(posicion), Color(Color) {}
 	~luz() {};
 
 	vector_3 get_posicion() const { return posicion; };

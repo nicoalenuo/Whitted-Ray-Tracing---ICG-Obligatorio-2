@@ -51,6 +51,8 @@ vector<objeto*> ControladorArchivos::cargar_objetos(tinyxml2::XMLElement* config
 	float altura;
 	double difuso_r, difuso_g, difuso_b, difuso_a;
 	double especular_r, especular_g, especular_b, especular_a;
+	float coeficiente_ambiente, coeficiente_difuso, coeficiente_especular, coeficiente_transmicion;
+	int material; //R = Reflectante, T = Transparente
 
 	//Carga de esferas 
 	//----------------
@@ -60,7 +62,6 @@ vector<objeto*> ControladorArchivos::cargar_objetos(tinyxml2::XMLElement* config
 		esfera_xml->FirstChildElement("posicion")->FirstChildElement("x")->QueryFloatText(&pos_x);
 		esfera_xml->FirstChildElement("posicion")->FirstChildElement("y")->QueryFloatText(&pos_y);
 		esfera_xml->FirstChildElement("posicion")->FirstChildElement("z")->QueryFloatText(&pos_z);
-		esfera_xml->FirstChildElement("radio")->QueryFloatText(&radio);
 		
 		esfera_xml->FirstChildElement("color_difuso")->FirstChildElement("r")->QueryDoubleText(&difuso_r);
 		esfera_xml->FirstChildElement("color_difuso")->FirstChildElement("g")->QueryDoubleText(&difuso_g);
@@ -72,12 +73,23 @@ vector<objeto*> ControladorArchivos::cargar_objetos(tinyxml2::XMLElement* config
 		esfera_xml->FirstChildElement("color_especular")->FirstChildElement("b")->QueryDoubleText(&especular_b);
 		esfera_xml->FirstChildElement("color_especular")->FirstChildElement("a")->QueryDoubleText(&especular_a);
 
+		esfera_xml->FirstChildElement("coeficiente_ambiente")->QueryFloatText(&coeficiente_ambiente);
+		esfera_xml->FirstChildElement("coeficiente_difuso")->QueryFloatText(&coeficiente_difuso);
+		esfera_xml->FirstChildElement("coeficiente_especular")->QueryFloatText(&coeficiente_especular);
+		esfera_xml->FirstChildElement("coeficiente_transmicion")->QueryFloatText(&coeficiente_transmicion);
+		esfera_xml->FirstChildElement("material")->QueryIntText(&material);
+
+		esfera_xml->FirstChildElement("radio")->QueryFloatText(&radio);
+
 		objetos.push_back(new esfera(
 			vector_3(pos_x, pos_y, pos_z),
-			radio,
 			{ difuso_r, difuso_g, difuso_b, difuso_a },
-			{ especular_r, especular_g, especular_b, especular_a }
+			{ especular_r, especular_g, especular_b, especular_a },
+			coeficiente_ambiente, coeficiente_difuso, coeficiente_especular, coeficiente_transmicion,
+			tipo_material(material),
+			radio
 		));
+
 		esfera_xml = esfera_xml->NextSiblingElement("esfera");
 	}
 
@@ -89,8 +101,6 @@ vector<objeto*> ControladorArchivos::cargar_objetos(tinyxml2::XMLElement* config
 		cilindro_xml->FirstChildElement("posicion")->FirstChildElement("x")->QueryFloatText(&pos_x);
 		cilindro_xml->FirstChildElement("posicion")->FirstChildElement("y")->QueryFloatText(&pos_y);
 		cilindro_xml->FirstChildElement("posicion")->FirstChildElement("z")->QueryFloatText(&pos_z);
-		cilindro_xml->FirstChildElement("radio")->QueryFloatText(&radio);
-		cilindro_xml->FirstChildElement("altura")->QueryFloatText(&altura);
 
 		cilindro_xml->FirstChildElement("color_difuso")->FirstChildElement("r")->QueryDoubleText(&difuso_r);
 		cilindro_xml->FirstChildElement("color_difuso")->FirstChildElement("g")->QueryDoubleText(&difuso_g);
@@ -102,12 +112,23 @@ vector<objeto*> ControladorArchivos::cargar_objetos(tinyxml2::XMLElement* config
 		cilindro_xml->FirstChildElement("color_especular")->FirstChildElement("b")->QueryDoubleText(&especular_b);
 		cilindro_xml->FirstChildElement("color_especular")->FirstChildElement("a")->QueryDoubleText(&especular_a);
 
+		cilindro_xml->FirstChildElement("coeficiente_ambiente")->QueryFloatText(&coeficiente_ambiente);
+		cilindro_xml->FirstChildElement("coeficiente_difuso")->QueryFloatText(&coeficiente_difuso);
+		cilindro_xml->FirstChildElement("coeficiente_especular")->QueryFloatText(&coeficiente_especular);
+		cilindro_xml->FirstChildElement("coeficiente_transmicion")->QueryFloatText(&coeficiente_transmicion);
+		cilindro_xml->FirstChildElement("material")->QueryIntText(&material);
+
+		cilindro_xml->FirstChildElement("radio")->QueryFloatText(&radio);
+		cilindro_xml->FirstChildElement("altura")->QueryFloatText(&altura);
+
 		objetos.push_back(new cilindro(
 			vector_3(pos_x, pos_y, pos_z),
-			radio,
-			altura,
 			{ difuso_r, difuso_g, difuso_b, difuso_a },
-			{ especular_r, especular_g, especular_b, especular_a }
+			{ especular_r, especular_g, especular_b, especular_a },
+			coeficiente_ambiente, coeficiente_difuso, coeficiente_especular, coeficiente_transmicion,
+			tipo_material(material),
+			radio,
+			altura
 		));
 
 		cilindro_xml = cilindro_xml->NextSiblingElement("cilindro");
@@ -116,8 +137,7 @@ vector<objeto*> ControladorArchivos::cargar_objetos(tinyxml2::XMLElement* config
 	//Carga de mallas poligonales
 	//----------------
 	tinyxml2::XMLElement* malla_poligonal_xml = mallas_poligonales_xml->FirstChildElement("malla_poligonal");
-	while (malla_poligonal_xml) {
-		
+	while (malla_poligonal_xml) {	
 		malla_poligonal_xml->FirstChildElement("color_difuso")->FirstChildElement("r")->QueryDoubleText(&difuso_r);
 		malla_poligonal_xml->FirstChildElement("color_difuso")->FirstChildElement("g")->QueryDoubleText(&difuso_g);
 		malla_poligonal_xml->FirstChildElement("color_difuso")->FirstChildElement("b")->QueryDoubleText(&difuso_b);
@@ -127,6 +147,12 @@ vector<objeto*> ControladorArchivos::cargar_objetos(tinyxml2::XMLElement* config
 		malla_poligonal_xml->FirstChildElement("color_especular")->FirstChildElement("g")->QueryDoubleText(&especular_g);
 		malla_poligonal_xml->FirstChildElement("color_especular")->FirstChildElement("b")->QueryDoubleText(&especular_b);
 		malla_poligonal_xml->FirstChildElement("color_especular")->FirstChildElement("a")->QueryDoubleText(&especular_a);
+
+		malla_poligonal_xml->FirstChildElement("coeficiente_ambiente")->QueryFloatText(&coeficiente_ambiente);
+		malla_poligonal_xml->FirstChildElement("coeficiente_difuso")->QueryFloatText(&coeficiente_difuso);
+		malla_poligonal_xml->FirstChildElement("coeficiente_especular")->QueryFloatText(&coeficiente_especular);
+		malla_poligonal_xml->FirstChildElement("coeficiente_transmicion")->QueryFloatText(&coeficiente_transmicion);
+		malla_poligonal_xml->FirstChildElement("material")->QueryIntText(&material);
 
 		vector<poligono_triangulo*> poligonos;
 		tinyxml2::XMLElement* triangulos = malla_poligonal_xml->FirstChildElement("triangulos");
@@ -150,11 +176,14 @@ vector<objeto*> ControladorArchivos::cargar_objetos(tinyxml2::XMLElement* config
 			));
 			triangulo = triangulo->NextSiblingElement("triangulo");
 		}
+		
 		objetos.push_back(new malla_poligonal(
 			vector_3(),
-			poligonos,
 			{ difuso_r, difuso_g, difuso_b, difuso_a },
-			{ especular_r, especular_g, especular_b, especular_a }
+			{ especular_r, especular_g, especular_b, especular_a },
+			coeficiente_ambiente, coeficiente_difuso, coeficiente_especular, coeficiente_transmicion,
+			tipo_material(material),
+			poligonos
 		));
 
 		malla_poligonal_xml = malla_poligonal_xml->NextSiblingElement("malla_poligonal");
@@ -232,6 +261,11 @@ camara* ControladorArchivos::cargar_camara(tinyxml2::XMLElement* configuracion) 
 
 pair<int, int> ControladorArchivos::cargar_datos_imagen(tinyxml2::XMLElement* configuracion) {
 	tinyxml2::XMLElement* datos_imagen_xml = configuracion->FirstChildElement("imagen");
+
+	if (datos_imagen_xml == NULL) {
+		cerr << "Error al cargar los datos de la imagen" << endl;
+		exit(1);
+	}
 
 	int width, height;
 

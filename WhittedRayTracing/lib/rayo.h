@@ -11,6 +11,7 @@ private:
 	vector_3 direccion;
 public:
 	rayo(vector_3 origen, vector_3 direccion);
+	~rayo() {}
 
 	vector_3 get_origen() const { return origen; };
 	vector_3 get_direccion() const { return direccion; };
