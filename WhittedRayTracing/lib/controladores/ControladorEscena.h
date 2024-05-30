@@ -21,6 +21,9 @@ private:
 
 	ControladorEscena();
 
+	int imagen_width;
+	int imagen_height;
+
 	vector<objeto*> objetos;
 	vector<luz*> luces;
 	camara* Camara;
@@ -31,7 +34,8 @@ public:
 	vector<objeto*> get_objetos() const { return objetos; };
 	vector<luz*> get_luces() const { return luces; };
 	camara* get_camara() { return Camara; };
-	vector<luz*> get_luces() { return luces; };
+	int get_imagen_width() const { return imagen_width; };
+	int get_imagen_height() const { return imagen_height; };
 
 	//Devuelve true si interseca con algun objeto, y si lo hace, devuelve cual y donde
 	bool obtener_objeto_intersecado_mas_cercano(rayo rayo_in, objeto*& objeto_out, vector_3& punto_interseccion_out);

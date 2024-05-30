@@ -41,7 +41,7 @@ bool cilindro::interseca(rayo rayo_in, vector_3& punto_interseccion_out) {
 }
 
 
-vector_3 cilindro::normal(vector_3 punto) {
+vector_3 cilindro::normal(vector_3 punto, rayo Rayo) {
     return 
         (punto.get_y() >= posicion.get_y() + altura / 2 ? vector_3(0, 1, 0) :
         punto.get_y() <= posicion.get_y() - altura / 2 ? vector_3(0, -1, 0) :

@@ -16,7 +16,7 @@ ControladorArchivos::~ControladorArchivos() {
 
 }
 
-void ControladorArchivos::cargar_xml(vector<objeto*>& objetos_out, vector<luz*>& luces_out, camara*& camara_out) {
+void ControladorArchivos::cargar_xml(vector<objeto*>& objetos_out, vector<luz*>& luces_out, camara*& camara_out, int& imagen_width_out, int& imagen_height_out) {
 	tinyxml2::XMLDocument configuracion_xml;
 	configuracion_xml.LoadFile(DIRECCION_CONFIGURACION_XML.c_str());
 	tinyxml2::XMLElement* configuracion = configuracion_xml.RootElement();
@@ -29,6 +29,9 @@ void ControladorArchivos::cargar_xml(vector<objeto*>& objetos_out, vector<luz*>&
 	objetos_out = cargar_objetos(configuracion);
 	luces_out = cargar_luces(configuracion);
 	camara_out = cargar_camara(configuracion);
+	pair<int, int> datos_imagen = cargar_datos_imagen(configuracion);
+	imagen_width_out = datos_imagen.first;
+	imagen_height_out = datos_imagen.second;
 }
 
 vector<objeto*> ControladorArchivos::cargar_objetos(tinyxml2::XMLElement* configuracion) {
@@ -175,9 +178,6 @@ vector<luz*> ControladorArchivos::cargar_luces(tinyxml2::XMLElement* configuraci
 
 	tinyxml2::XMLElement* luz_xml = luces_xml->FirstChildElement("luz");
 	while (luz_xml) {
-		//Crear objeto con propiedades de luz_xml
-		//Agregarlo a luces
-
 		luz_xml->FirstChildElement("posicion")->FirstChildElement("x")->QueryFloatText(&pos_x);
 		luz_xml->FirstChildElement("posicion")->FirstChildElement("y")->QueryFloatText(&pos_y);
 		luz_xml->FirstChildElement("posicion")->FirstChildElement("z")->QueryFloatText(&pos_z);
@@ -228,6 +228,17 @@ camara* ControladorArchivos::cargar_camara(tinyxml2::XMLElement* configuracion) 
 			pos_z_imagen
 		)
 	);
+}
+
+pair<int, int> ControladorArchivos::cargar_datos_imagen(tinyxml2::XMLElement* configuracion) {
+	tinyxml2::XMLElement* datos_imagen_xml = configuracion->FirstChildElement("imagen");
+
+	int width, height;
+
+	datos_imagen_xml->FirstChildElement("resolucion_imagen")->FirstChildElement("width")->QueryIntText(&width);
+	datos_imagen_xml->FirstChildElement("resolucion_imagen")->FirstChildElement("width")->QueryIntText(&height);
+
+	return { width, height };
 }
 
 bool ControladorArchivos::guardar_resultado(imagen* img_resultado) {

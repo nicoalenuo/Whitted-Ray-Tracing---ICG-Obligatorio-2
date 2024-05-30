@@ -1,15 +1,15 @@
 #include "../lib/imagen.h"
 
-imagen::imagen() {
-    pixeles = new color * [IMAGEN_HEIGHT];
-    for (int i = 0; i < IMAGEN_HEIGHT; ++i) {
-        pixeles[i] = new color[IMAGEN_WIDTH];
+imagen::imagen(int width, int height) {
+    pixeles = new color * [height];
+    for (int i = 0; i < height; ++i) {
+        pixeles[i] = new color[width];
     }
 
 	// Para probar que se generan bien los colores
 	// Se borrará mas adelante
-	for (int i = 0; i < IMAGEN_HEIGHT; i++) {
-		for (int j = 0; j < IMAGEN_WIDTH; j++) {
+	for (int i = 0; i < height; i++) {
+		for (int j = 0; j < width; j++) {
 			if (i < 200) {
 				if (j < 200) {
 					pixeles[i][j].r = 100;
@@ -29,10 +29,13 @@ imagen::imagen() {
 			}
 		}
 	}
+
+	imagen_width = width;
+	imagen_height = height;
 }
 
 imagen::~imagen() {
-    for (int i = 0; i < IMAGEN_HEIGHT; ++i) {
+    for (int i = 0; i < imagen_height; ++i) {
         delete[] pixeles[i];
     }
     delete[] pixeles;
@@ -41,7 +44,7 @@ imagen::~imagen() {
 FIBITMAP* imagen::obtener_bitmap() {
 	double max_intensity = 0.;
 
-	FIBITMAP* result = FreeImage_Allocate(IMAGEN_WIDTH, IMAGEN_HEIGHT, 24);
+	FIBITMAP* result = FreeImage_Allocate(imagen_width, imagen_height, 24);
 	RGBQUAD color;
 	if (!result) {
 		FreeImage_DeInitialise();
@@ -50,8 +53,8 @@ FIBITMAP* imagen::obtener_bitmap() {
 	}
 
 	// Get highest color value for normalization 0..1
-	for (size_t i = 0; i < IMAGEN_HEIGHT; i++) {
-		for (size_t j = 0; j < IMAGEN_WIDTH; j++) {
+	for (int i = 0; i < imagen_height; i++) {
+		for (int j = 0; j < imagen_width; j++) {
 			max_intensity = max(max_intensity, this->pixeles[i][j].r);
 			max_intensity = max(max_intensity, this->pixeles[i][j].g);
 			max_intensity = max(max_intensity, this->pixeles[i][j].b);
@@ -59,8 +62,8 @@ FIBITMAP* imagen::obtener_bitmap() {
 	}
 
 	// Normalize and convert to Byte
-	for (unsigned int i = 0; i < IMAGEN_HEIGHT; i++) {
-		for (unsigned int j = 0; j < IMAGEN_WIDTH; j++) {
+	for (int i = 0; i < imagen_height; i++) {
+		for (int j = 0; j < imagen_width; j++) {
 
 			// Apply gamma correction if max intensity gets over 1
 			if (max_intensity > 1) {
@@ -75,7 +78,7 @@ FIBITMAP* imagen::obtener_bitmap() {
 				color.rgbGreen = (BYTE)(this->pixeles[i][j].g * 255.0);
 				color.rgbBlue = (BYTE)(this->pixeles[i][j].b * 255.0);
 			}
-			FreeImage_SetPixelColor(result, j, IMAGEN_HEIGHT - 1 - i, &color);
+			FreeImage_SetPixelColor(result, j, imagen_height - 1 - i, &color);
 		}
 	}
 	return result;

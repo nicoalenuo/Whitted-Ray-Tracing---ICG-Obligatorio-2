@@ -12,8 +12,10 @@
 class imagen {
 private:
 	color** pixeles;
+	int imagen_width;
+	int imagen_height;
 public:
-	imagen();
+	imagen(int width, int height);
 	~imagen();
 	
 	color** get_pixeles() const { return pixeles; };

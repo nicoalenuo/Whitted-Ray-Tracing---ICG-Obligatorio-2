@@ -27,6 +27,6 @@ bool esfera::interseca(rayo rayo_in, vector_3& punto_interseccion_out) {
 	}
 }
 
-vector_3 esfera::normal(vector_3 punto) {
+vector_3 esfera::normal(vector_3 punto, rayo Rayo) {
 	return (punto - posicion).normalizado();
 }

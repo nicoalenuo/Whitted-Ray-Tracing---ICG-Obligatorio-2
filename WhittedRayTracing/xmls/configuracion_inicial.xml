@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <configuracion>
+	<imagen>
+		<resolucion_imagen>
+			<width>1024</width>
+			<height>1024</height>
+		</resolucion_imagen>
+	</imagen>
+	
 	<camara>
 		<posicion_camara>
 			<x>0</x>
@@ -126,35 +133,18 @@
 					<triangulo>
 						<coord>
 							<x>0</x>
-							<y>100</y>
+							<y>0</y>
+							<z>0</z>
+						</coord>
+						<coord>
+							<x>50</x>
+							<y>50</y>
 							<z>0</z>
 						</coord>
 						<coord>
 							<x>-50</x>
-							<y>150</y>
-							<z>-50</z>
-						</coord>
-						<coord>
-							<x>50</x>
-							<y>150</y>
-							<z>-50</z>
-						</coord>
-					</triangulo>
-					<triangulo>
-						<coord>
-							<x>0</x>
-							<y>100</y>
+							<y>50</y>
 							<z>0</z>
-						</coord>
-						<coord>
-							<x>-50</x>
-							<y>150</y>
-							<z>-50</z>
-						</coord>
-						<coord>
-							<x>50</x>
-							<y>150</y>
-							<z>50</z>
 						</coord>
 					</triangulo>
 				</triangulos>

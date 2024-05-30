@@ -3,7 +3,7 @@
 ControladorEscena* ControladorEscena::instancia = nullptr;
 
 ControladorEscena::ControladorEscena() {
-	ControladorArchivos::getInstance()->cargar_xml(objetos, luces, Camara);
+	ControladorArchivos::getInstance()->cargar_xml(objetos, luces, Camara, imagen_width, imagen_height);
 }
 
 ControladorEscena::~ControladorEscena() {
