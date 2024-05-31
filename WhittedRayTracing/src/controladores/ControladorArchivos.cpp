@@ -16,7 +16,7 @@ ControladorArchivos::~ControladorArchivos() {
 
 }
 
-void ControladorArchivos::cargar_xml(vector<objeto*>& objetos_out, vector<luz*>& luces_out, camara*& camara_out, int& imagen_width_out, int& imagen_height_out) {
+void ControladorArchivos::cargar_xml(vector<objeto*>& objetos_out, vector<luz*>& luces_out, camara*& camara_out) {
 	tinyxml2::XMLDocument configuracion_xml;
 	configuracion_xml.LoadFile(DIRECCION_CONFIGURACION_XML.c_str());
 	tinyxml2::XMLElement* configuracion = configuracion_xml.RootElement();
@@ -29,9 +29,6 @@ void ControladorArchivos::cargar_xml(vector<objeto*>& objetos_out, vector<luz*>&
 	objetos_out = cargar_objetos(configuracion);
 	luces_out = cargar_luces(configuracion);
 	camara_out = cargar_camara(configuracion);
-	pair<int, int> datos_imagen = cargar_datos_imagen(configuracion);
-	imagen_width_out = datos_imagen.first;
-	imagen_height_out = datos_imagen.second;
 }
 
 vector<objeto*> ControladorArchivos::cargar_objetos(tinyxml2::XMLElement* configuracion) {
@@ -52,7 +49,7 @@ vector<objeto*> ControladorArchivos::cargar_objetos(tinyxml2::XMLElement* config
 	double difuso_r, difuso_g, difuso_b, difuso_a;
 	double especular_r, especular_g, especular_b, especular_a;
 	float coeficiente_ambiente, coeficiente_difuso, coeficiente_especular, coeficiente_transmicion;
-	int material; //R = Reflectante, T = Transparente
+	int material; 
 
 	//Carga de esferas 
 	//----------------
@@ -136,6 +133,7 @@ vector<objeto*> ControladorArchivos::cargar_objetos(tinyxml2::XMLElement* config
 
 	//Carga de mallas poligonales
 	//----------------
+
 	tinyxml2::XMLElement* malla_poligonal_xml = mallas_poligonales_xml->FirstChildElement("malla_poligonal");
 	while (malla_poligonal_xml) {	
 		malla_poligonal_xml->FirstChildElement("color_difuso")->FirstChildElement("r")->QueryDoubleText(&difuso_r);
@@ -235,7 +233,9 @@ camara* ControladorArchivos::cargar_camara(tinyxml2::XMLElement* configuracion) 
 		exit(1);
 	}
 
-	float pos_x, pos_y, pos_z, pos_x_imagen, pos_y_imagen, pos_z_imagen;
+	float pos_x, pos_y, pos_z;
+	float pos_x_imagen, pos_y_imagen, pos_z_imagen;
+	int width, height;
 
 	camara_xml->FirstChildElement("posicion_camara")->FirstChildElement("x")->QueryFloatText(&pos_x);
 	camara_xml->FirstChildElement("posicion_camara")->FirstChildElement("y")->QueryFloatText(&pos_y);
@@ -244,6 +244,9 @@ camara* ControladorArchivos::cargar_camara(tinyxml2::XMLElement* configuracion) 
 	camara_xml->FirstChildElement("posicion_imagen")->FirstChildElement("x")->QueryFloatText(&pos_x_imagen);
 	camara_xml->FirstChildElement("posicion_imagen")->FirstChildElement("y")->QueryFloatText(&pos_y_imagen);
 	camara_xml->FirstChildElement("posicion_imagen")->FirstChildElement("z")->QueryFloatText(&pos_z_imagen);
+
+	camara_xml->FirstChildElement("imagen_width")->QueryIntText(&width);
+	camara_xml->FirstChildElement("imagen_height")->QueryIntText(&height);
 
 	return new camara(
 		vector_3(
@@ -255,27 +258,12 @@ camara* ControladorArchivos::cargar_camara(tinyxml2::XMLElement* configuracion) 
 			pos_x_imagen,
 			pos_y_imagen,
 			pos_z_imagen
-		)
+		),
+		width, height
 	);
 }
 
-pair<int, int> ControladorArchivos::cargar_datos_imagen(tinyxml2::XMLElement* configuracion) {
-	tinyxml2::XMLElement* datos_imagen_xml = configuracion->FirstChildElement("imagen");
-
-	if (datos_imagen_xml == NULL) {
-		cerr << "Error al cargar los datos de la imagen" << endl;
-		exit(1);
-	}
-
-	int width, height;
-
-	datos_imagen_xml->FirstChildElement("resolucion_imagen")->FirstChildElement("width")->QueryIntText(&width);
-	datos_imagen_xml->FirstChildElement("resolucion_imagen")->FirstChildElement("width")->QueryIntText(&height);
-
-	return { width, height };
-}
-
-bool ControladorArchivos::guardar_resultado(imagen* img_resultado) {
+void ControladorArchivos::guardar_resultado(imagen* img_resultado) {
 	FreeImage_Initialise();
 
 	time_t in_time_t = chrono::system_clock::to_time_t(chrono::system_clock::now());
@@ -285,29 +273,25 @@ bool ControladorArchivos::guardar_resultado(imagen* img_resultado) {
 	oss << put_time(&buf, "%d %B - %H-%M-%S");
 	string direccion = DIRECCION_RESULTADOS + oss.str();
 
-	bool resultado;
-
 	// Crear el directorio
 	if (!filesystem::create_directory(direccion)) {
 		cerr << "Error al crear el directorio: " << direccion << endl;
-		return false;
+		exit(1);
 	}
 
 	direccion += "\\resultado.png";
 
 	FIBITMAP* bitmap = img_resultado->obtener_bitmap();
-	resultado = FreeImage_Save(FIF_PNG, bitmap, direccion.c_str(), 0);
-	FreeImage_Unload(bitmap);
-	FreeImage_DeInitialise();
-
-	if (!resultado) {
+	if (!FreeImage_Save(FIF_PNG, bitmap, direccion.c_str(), 0)) {
+		FreeImage_Unload(bitmap);
+		FreeImage_DeInitialise();
 		cerr << "Error al guardar la imagen en: " << direccion << endl;
-	}
-	else {
+		exit(1);
+	} else {
+		FreeImage_Unload(bitmap);
+		FreeImage_DeInitialise();
 		cout << "Resultado guardado en: " << direccion << endl;
 	}
-
-	return resultado;
 }
 
 

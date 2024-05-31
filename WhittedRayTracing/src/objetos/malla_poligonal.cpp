@@ -5,8 +5,8 @@ bool malla_poligonal::interseca(rayo rayo_in, vector_3& punto_interseccion_out) 
     poligono_triangulo* triangulo;
     vector_3 normal;
     float distancia_minima;
-
     float paralelo;
+
     for (size_t i = 0; i < poligonos.size(); i++) {
         triangulo = poligonos[i];
         normal = triangulo->normal();
@@ -21,11 +21,11 @@ bool malla_poligonal::interseca(rayo rayo_in, vector_3& punto_interseccion_out) 
                 vector_3 artista_2 = triangulo->get_coord_3() - triangulo->get_coord_2();
                 vector_3 artista_3 = triangulo->get_coord_1() - triangulo->get_coord_3();
 
-                vector_3 C0 = punto_interseccion - triangulo->get_coord_1();
-                vector_3 C1 = punto_interseccion - triangulo->get_coord_2();
-                vector_3 C2 = punto_interseccion - triangulo->get_coord_3();
+                vector_3 C1 = punto_interseccion - triangulo->get_coord_1();
+                vector_3 C2 = punto_interseccion - triangulo->get_coord_2();
+                vector_3 C3 = punto_interseccion - triangulo->get_coord_3();
 
-                if ((artista_1 * C0).producto_interno(normal) >= 0 && (artista_2 * C1).producto_interno(normal) >= 0 && (artista_3 * C2).producto_interno(normal) >= 0) {
+                if ((artista_1 * C1).producto_interno(normal) >= 0 && (artista_2 * C2).producto_interno(normal) >= 0 && (artista_3 * C3).producto_interno(normal) >= 0) {
                     if (!interseca) {
                         distancia_minima = distancia;
                         interseca = true;
@@ -58,13 +58,11 @@ vector_3 malla_poligonal::normal(vector_3 punto, rayo Rayo) {
         vector_3 artista_2 = poligono->get_coord_3() - poligono->get_coord_2();
         vector_3 artista_3 = poligono->get_coord_1() - poligono->get_coord_3();
 
-        vector_3 C0 = punto - poligono->get_coord_1();
-        vector_3 C1 = punto - poligono->get_coord_2();
-        vector_3 C2 = punto - poligono->get_coord_3();
+        vector_3 C1 = punto - poligono->get_coord_1();
+        vector_3 C2 = punto - poligono->get_coord_2();
+        vector_3 C3 = punto - poligono->get_coord_3();
 
-        if ((artista_1*C0).producto_interno(normal) >= 0 &&
-            (artista_2*C1).producto_interno(normal) >= 0 &&
-            (artista_3*C2).producto_interno(normal) >= 0) {
+        if ((artista_1 * C1).producto_interno(normal) >= 0 && (artista_2 * C2).producto_interno(normal) >= 0 && (artista_3 * C3).producto_interno(normal) >= 0) {
             if (Rayo.get_direccion().producto_interno(normal) <= 0)
                 return normal;
             else

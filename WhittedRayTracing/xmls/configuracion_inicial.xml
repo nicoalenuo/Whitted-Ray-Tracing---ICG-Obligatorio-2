@@ -1,12 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- En material, 0 es reflectante, 1 es transparente -->
 <configuracion>
-	<imagen>
-		<resolucion_imagen>
-			<width>1024</width>
-			<height>1024</height>
-		</resolucion_imagen>
-	</imagen>
 	
 	<camara>
 		<posicion_camara>
@@ -19,6 +13,8 @@
 			<y>0</y>
 			<z>0</z>
 		</posicion_imagen>
+		<imagen_width>1024</imagen_width>
+		<imagen_height>1024</imagen_height>
 	</camara>
 
 	<luces>

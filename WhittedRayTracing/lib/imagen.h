@@ -19,7 +19,7 @@ public:
 	~imagen();
 	
 	color** get_pixeles() const { return pixeles; };
-	void set_pixel(const int i, const int j, const color color) { pixeles[i][j] = color; };
+	void set_pixel(int i, int j, color color) { pixeles[i][j] = color; };
 
 	FIBITMAP* obtener_bitmap();
 };
