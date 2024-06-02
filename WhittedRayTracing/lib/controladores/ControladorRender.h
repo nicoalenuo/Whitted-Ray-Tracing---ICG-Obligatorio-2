@@ -20,6 +20,8 @@ private:
 	color traza_rr(rayo Rayo, int profundidad);
 	color sombra_rr(objeto* objeto, rayo Rayo, vector_3 punto_interseca, vector_3 normal, int profundidad);
 
+	color get_componente_especular(objeto* objeto, rayo rayo_r, int profundidad);
+
 public:
 	static ControladorRender* getInstance();
 	~ControladorRender();

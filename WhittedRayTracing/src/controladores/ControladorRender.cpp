@@ -65,7 +65,7 @@ color get_componente_especular(objeto* objeto, vector_3 V, vector_3 N, vector_3 
 color get_componente_luz(objeto* objeto, rayo Rayo, vector_3 punto_interseca, vector_3 normal) {
 	float distancia_de_la_luz = 0;
 	color color_especular = negro;
-	color color_especular_aux;
+	color color_especular_aux = negro;
 	float atenuacion = 0;
 	float sombra = 0;
 	color componente_difuso;
@@ -110,6 +110,13 @@ color get_componente_luz(objeto* objeto, rayo Rayo, vector_3 punto_interseca, ve
 	return color_especular;
 }
 
+color ControladorRender::get_componente_especular(objeto* objeto, rayo rayo_r, int profundidad) {
+	return aux_color_x_escalar(
+		traza_rr(rayo_r, profundidad + 1),
+		objeto->get_coeficiente_especular()
+	);
+}
+
 color ControladorRender::sombra_rr(objeto* objeto, rayo Rayo, vector_3 punto_interseca, vector_3 normal, int profundidad) {
 	
 	//color = término del ambiente;
@@ -122,10 +129,18 @@ color ControladorRender::sombra_rr(objeto* objeto, rayo Rayo, vector_3 punto_int
 	if (profundidad < PROFUNDIDAD_MAXIMA) {
 		//if (objeto es reflejante)
 		if (objeto->get_material() == REFLECTANTE) {
-			
+			rayo rayo_r = rayo(punto_interseca + normal * EPSILON,
+				direccion_reflejada(Rayo.get_direccion(), normal)
+			);
+			color = aux_color_a_color(
+				color,
+				get_componente_especular(objeto, rayo_r, profundidad)
+			);
 		}
 		//if (objeto es transparente)
-		//if(objeto->get_material() == TRANSPARENTE){}
+		/*if (objeto->get_material() == TRANSPARENTE) {
+		
+		}*/
 	}
 
 	return color;
