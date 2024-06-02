@@ -51,6 +51,38 @@ vector_3 direccion_reflejada(vector_3 I, vector_3 N) {
 	return I - N * 2  * (I.producto_interno(N));
 }
 
+
+/*
+Se manejan dos situaciones:
+- Cuando el rayo está dentro del objeto
+- Cuando el rayo está afuera.
+
+Si el rayo está afuera, necesitas hacer cosi positivo cosi = -N.I
+
+Si el rayo está dentro, necesitas invertir los índices de refracción y negar la normal N
+*/
+vector_3 direccion_refractada(vector_3 I, vector_3 N, float ior) {
+	float cosi = min(1.f, max(-1.f, I.producto_interno(N)));
+	
+	float etai = COEFICIENTE_REFRACCION_VACIO; // Medio antes de la refraccion
+	float etat = ior;						   // Medio despues de la refraccion
+	vector_3 n = N;
+	
+	if (cosi < 0) { //El rayo esta afuera
+		cosi = -cosi;
+	} else { //El rayo esta dentro
+		n = -n;
+		etai = ior;
+		etat = COEFICIENTE_REFRACCION_VACIO;
+	}
+
+	float eta = etai / etat;
+
+	float k = 1 - eta * eta * (1 - cosi * cosi);
+
+	return k < 0 ? vector_3(0.f, 0.f, 0.f) : (I * eta) + n * (eta * cosi - sqrtf(k));
+}
+
 color get_componente_especular(objeto* objeto, vector_3 V, vector_3 N, vector_3 L) {
 	return objeto->get_color_especular();
 	return aux_color_x_escalar(
@@ -110,12 +142,20 @@ color get_componente_luz(objeto* objeto, rayo Rayo, vector_3 punto_interseca, ve
 	return color_especular;
 }
 
-color ControladorRender::get_componente_especular(objeto* objeto, rayo rayo_r, int profundidad) {
+color ControladorRender::get_componente_reflectivo(objeto* objeto, rayo rayo_r, int profundidad) {
 	return aux_color_x_escalar(
 		traza_rr(rayo_r, profundidad + 1),
 		objeto->get_coeficiente_especular()
 	);
 }
+
+color ControladorRender::get_componente_refractivo(objeto* objeto, rayo rayo_t, int profundidad) {
+	return aux_color_x_escalar(
+		traza_rr(rayo_t, profundidad + 1),
+		objeto->get_coeficiente_transmicion()
+	);
+}
+
 
 color ControladorRender::sombra_rr(objeto* objeto, rayo Rayo, vector_3 punto_interseca, vector_3 normal, int profundidad) {
 	
@@ -134,13 +174,21 @@ color ControladorRender::sombra_rr(objeto* objeto, rayo Rayo, vector_3 punto_int
 			);
 			color = aux_color_a_color(
 				color,
-				get_componente_especular(objeto, rayo_r, profundidad)
+				get_componente_reflectivo(objeto, rayo_r, profundidad)
 			);
 		}
 		//if (objeto es transparente)
-		/*if (objeto->get_material() == TRANSPARENTE) {
-		
-		}*/
+		if (objeto->get_material() == TRANSPARENTE) {
+			//if (no ocurre la reflexión interna total) { -> coeficiente de refraccionn < 1
+			rayo rayo_t = rayo(punto_interseca + normal * EPSILON,
+				direccion_refractada(Rayo.get_direccion(), normal, objeto->get_coeficiente_transmicion())
+			);
+			color = aux_color_a_color(
+				color,
+				get_componente_refractivo(objeto, rayo_t, profundidad)
+			);
+
+		}
 	}
 
 	return color;
