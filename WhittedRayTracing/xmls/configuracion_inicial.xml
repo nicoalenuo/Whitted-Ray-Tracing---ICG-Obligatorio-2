@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- En material, 0 es reflectante, 1 es transparente -->
 <configuracion>
 	
 	<camara>
 		<posicion_camara>
 			<x>0</x>
 			<y>0</y>
-			<z>-500</z>
+			<z>-2048</z>
 		</posicion_camara>
 		<posicion_imagen>
 			<x>0</x>
@@ -21,151 +20,374 @@
 		<luz>
 			<posicion>
 				<x>0</x>
-				<y>150</y>
+				<y>400</y>
 				<z>150</z>
 			</posicion>
 			<color>
 				<r>1</r>
 				<g>1</g>
 				<b>1</b>
-				<a>1</a>
 			</color>
 		</luz>
 		<luz>
 			<posicion>
 				<x>0</x>
-				<y>150</y>
+				<y>600</y>
 				<z>250</z>
 			</posicion>
 			<color>
 				<r>1</r>
 				<g>1</g>
 				<b>1</b>
-				<a>1</a>
 			</color>
 		</luz>
 	</luces>
 	
 	<objetos>
+		
 		<esferas>
 			<esfera>
 				<coeficiente_ambiente>0.6</coeficiente_ambiente>
 				<coeficiente_difuso>0.3</coeficiente_difuso>
-				<coeficiente_especular>0.05</coeficiente_especular>
+				<coeficiente_especular>1</coeficiente_especular>
 				<coeficiente_transmicion>0</coeficiente_transmicion>
-				<material>0</material>
-				<posicion>
-					<x>0</x>
-					<y>0</y>
-					<z>50</z>
-				</posicion>
-				<radio>10</radio>
+				<es_reflectante>true</es_reflectante>
 				<color_difuso>
-					<r>255</r>
+					<r>1</r>
 					<g>0</g>
 					<b>0</b>
-					<a>255</a>
 				</color_difuso>
 				<color_especular>
-					<r>255</r>
-					<g>255</g>
-					<b>255</b>
-					<a>255</a>
+					<r>1</r>
+					<g>1</g>
+					<b>1</b>
 				</color_especular>
-			</esfera>
-			<esfera>
-				<coeficiente_ambiente>0.6</coeficiente_ambiente>
-				<coeficiente_difuso>0.3</coeficiente_difuso>
-				<coeficiente_especular>0.05</coeficiente_especular>
-				<coeficiente_transmicion>0</coeficiente_transmicion>
-				<material>1</material>
 				<posicion>
 					<x>0</x>
-					<y>50</y>
-					<z>50</z>
+					<y>100</y>
+					<z>200</z>
 				</posicion>
-				<radio>10</radio>
-				<color_difuso>
-					<r>0</r>
-					<g>255</g>
-					<b>0</b>
-					<a>255</a>
-				</color_difuso>
-				<color_especular>
-					<r>255</r>
-					<g>255</g>
-					<b>255</b>
-					<a>255</a>
-				</color_especular>
+				<radio>100</radio>
 			</esfera>
 		</esferas>
+		
 		<cilindros>
 			<cilindro>
 				<coeficiente_ambiente>0.6</coeficiente_ambiente>
 				<coeficiente_difuso>0.3</coeficiente_difuso>
-				<coeficiente_especular>0.05</coeficiente_especular>
-				<coeficiente_transmicion>0</coeficiente_transmicion>
-				<material>0</material>
-				<posicion>
-					<x>50</x>
-					<y>0</y>
-					<z>10</z>
-				</posicion>
-				<radio>20</radio>
-				<altura>20</altura>
+				<coeficiente_especular>0.1</coeficiente_especular>
+				<coeficiente_transmicion>0.8</coeficiente_transmicion>
+				<es_reflectante>true</es_reflectante>
 				<color_difuso>
-					<r>255</r>
-					<g>255</g>
+					<r>1</r>
+					<g>1</g>
 					<b>0</b>
-					<a>255</a>
 				</color_difuso>
 				<color_especular>
-					<r>255</r>
-					<g>255</g>
-					<b>255</b>
-					<a>255</a>
+					<r>1</r>
+					<g>1</g>
+					<b>1</b>
 				</color_especular>
+				<posicion>
+					<x>-300</x>
+					<y>0</y>
+					<z>200</z>
+				</posicion>
+				<radio>100</radio>
+				<altura>200</altura>
 			</cilindro>
 		</cilindros>
+		
 		<mallas_poligonales>
+
+			<!-- Suelo -->
 			<malla_poligonal>
-				<coeficiente_ambiente>0.6</coeficiente_ambiente>
-				<coeficiente_difuso>0.3</coeficiente_difuso>
-				<coeficiente_especular>0.05</coeficiente_especular>
+				<coeficiente_ambiente>1</coeficiente_ambiente>
+				<coeficiente_difuso>1</coeficiente_difuso>
+				<coeficiente_especular>1</coeficiente_especular>
 				<coeficiente_transmicion>0</coeficiente_transmicion>
-				<material>0</material>
+				<es_reflectante>false</es_reflectante>
 				<color_difuso>
-					<r>0</r>
-					<g>255</g>
-					<b>0</b>
-					<a>255</a>
+					<r>1</r>
+					<g>1</g>
+					<b>1</b>
+					<a>1</a>
 				</color_difuso>
 				<color_especular>
-					<r>255</r>
-					<g>255</g>
-					<b>255</b>
-					<a>255</a>
+					<r>1</r>
+					<g>1</g>
+					<b>1</b>
+					<a>1</a>
 				</color_especular>
 				<triangulos>
 					<triangulo>
 						<coord>
-							<x>0</x>
-							<y>0</y>
+							<x>-512</x>
+							<y>-512</y>
 							<z>0</z>
 						</coord>
 						<coord>
-							<x>50</x>
-							<y>50</y>
+							<x>512</x>
+							<y>-512</y>
+							<z>1024</z>
+						</coord>
+						<coord>
+							<x>-512</x>
+							<y>-512</y>
+							<z>1024</z>
+						</coord>
+					</triangulo>
+					<triangulo>
+						<coord>
+							<x>-512</x>
+							<y>-512</y>
 							<z>0</z>
 						</coord>
 						<coord>
-							<x>-50</x>
-							<y>50</y>
+							<x>512</x>
+							<y>-512</y>
+							<z>0</z>
+						</coord>
+						<coord>
+							<x>512</x>
+							<y>-512</y>
+							<z>1024</z>
+						</coord>
+					</triangulo>
+				</triangulos>
+			</malla_poligonal>
+			<!-- Fin suelo -->
+
+			<!-- Pared derecha -->
+			<malla_poligonal>
+				<coeficiente_ambiente>1</coeficiente_ambiente>
+				<coeficiente_difuso>1</coeficiente_difuso>
+				<coeficiente_especular>1</coeficiente_especular>
+				<coeficiente_transmicion>0</coeficiente_transmicion>
+				<es_reflectante>false</es_reflectante>
+				<color_difuso>
+					<r>0</r>
+					<g>1</g>
+					<b>0</b>
+				</color_difuso>
+				<color_especular>
+					<r>1</r>
+					<g>1</g>
+					<b>1</b>
+				</color_especular>
+				<triangulos>
+					<triangulo>
+						<coord>
+							<x>512</x>
+							<y>-512</y>
+							<z>0</z>
+						</coord>
+						<coord>
+							<x>512</x>
+							<y>-512</y>
+							<z>1024</z>
+						</coord>
+						<coord>
+							<x>512</x>
+							<y>512</y>
+							<z>0</z>
+						</coord>
+					</triangulo>
+					<triangulo>
+						<coord>
+							<x>512</x>
+							<y>-512</y>
+							<z>1024</z>
+						</coord>
+						<coord>
+							<x>512</x>
+							<y>512</y>
+							<z>1024</z>
+						</coord>
+						<coord>
+							<x>512</x>
+							<y>512</y>
 							<z>0</z>
 						</coord>
 					</triangulo>
 				</triangulos>
 			</malla_poligonal>
+			<!-- Fin pared derecha -->
+
+
+			<!-- Pared izquierda -->
+			<malla_poligonal>
+				<coeficiente_ambiente>1</coeficiente_ambiente>
+				<coeficiente_difuso>1</coeficiente_difuso>
+				<coeficiente_especular>1</coeficiente_especular>
+				<coeficiente_transmicion>0</coeficiente_transmicion>
+				<es_reflectante>false</es_reflectante>
+				<color_difuso>
+					<r>1</r>
+					<g>0</g>
+					<b>0</b>
+				</color_difuso>
+				<color_especular>
+					<r>1</r>
+					<g>1</g>
+					<b>1</b>
+				</color_especular>
+				<triangulos>
+					<triangulo>
+						<coord>
+							<x>-512</x>
+							<y>-512</y>
+							<z>0</z>
+						</coord>
+						<coord>
+							<x>-512</x>
+							<y>-512</y>
+							<z>1024</z>
+						</coord>
+						<coord>
+							<x>-512</x>
+							<y>512</y>
+							<z>0</z>
+						</coord>
+					</triangulo>
+					<triangulo>
+						<coord>
+							<x>-512</x>
+							<y>-512</y>
+							<z>1024</z>
+						</coord>
+						<coord>
+							<x>-512</x>
+							<y>512</y>
+							<z>1024</z>
+						</coord>
+						<coord>
+							<x>-512</x>
+							<y>512</y>
+							<z>0</z>
+						</coord>
+					</triangulo>
+				</triangulos>
+			</malla_poligonal>
+			<!-- Fin pared izquierda -->
+
+
+
+			<!-- Pared trasera -->
+			<malla_poligonal>
+				<coeficiente_ambiente>1</coeficiente_ambiente>
+				<coeficiente_difuso>1</coeficiente_difuso>
+				<coeficiente_especular>1</coeficiente_especular>
+				<coeficiente_transmicion>0</coeficiente_transmicion>
+				<es_reflectante>false</es_reflectante>
+				<color_difuso>
+					<r>1</r>
+					<g>1</g>
+					<b>1</b>
+				</color_difuso>
+				<color_especular>
+					<r>1</r>
+					<g>1</g>
+					<b>1</b>
+				</color_especular>
+				<triangulos>
+					<triangulo>
+						<coord>
+							<x>-512</x>
+							<y>-512</y>
+							<z>1024</z>
+						</coord>
+						<coord>
+							<x>512</x>
+							<y>512</y>
+							<z>1024</z>
+						</coord>
+						<coord>
+							<x>-512</x>
+							<y>512</y>
+							<z>1024</z>
+						</coord>
+					</triangulo>
+					<triangulo>
+						<coord>
+							<x>-512</x>
+							<y>-512</y>
+							<z>1024</z>
+						</coord>
+						<coord>
+							<x>512</x>
+							<y>-512</y>
+							<z>1024</z>
+						</coord>
+						<coord>
+							<x>512</x>
+							<y>512</y>
+							<z>1024</z>
+						</coord>
+					</triangulo>
+				</triangulos>
+			</malla_poligonal>
+			<!-- Fin pared trasera -->
+
+			<!-- Techo -->
+			<malla_poligonal>
+				<coeficiente_ambiente>1</coeficiente_ambiente>
+				<coeficiente_difuso>1</coeficiente_difuso>
+				<coeficiente_especular>1</coeficiente_especular>
+				<coeficiente_transmicion>0</coeficiente_transmicion>
+				<es_reflectante>false</es_reflectante>
+				<color_difuso>
+					<r>1</r>
+					<g>1</g>
+					<b>1</b>
+					<a>1</a>
+				</color_difuso>
+				<color_especular>
+					<r>1</r>
+					<g>1</g>
+					<b>1</b>
+					<a>1</a>
+				</color_especular>
+				<triangulos>
+					<triangulo>
+						<coord>
+							<x>-512</x>
+							<y>512</y>
+							<z>0</z>
+						</coord>
+						<coord>
+							<x>512</x>
+							<y>512</y>
+							<z>1024</z>
+						</coord>
+						<coord>
+							<x>-512</x>
+							<y>512</y>
+							<z>1024</z>
+						</coord>
+					</triangulo>
+					<triangulo>
+						<coord>
+							<x>-512</x>
+							<y>512</y>
+							<z>0</z>
+						</coord>
+						<coord>
+							<x>512</x>
+							<y>512</y>
+							<z>0</z>
+						</coord>
+						<coord>
+							<x>512</x>
+							<y>512</y>
+							<z>1024</z>
+						</coord>
+					</triangulo>
+				</triangulos>
+			</malla_poligonal>
+			<!-- Fin techo -->
+			
+			
 		</mallas_poligonales>
 	</objetos>
 </configuracion>

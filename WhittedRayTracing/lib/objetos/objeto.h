@@ -14,17 +14,17 @@ protected:
 	color color_difuso, color_especular;
 	float coeficiente_ambiente, coeficiente_difuso, coeficiente_especular, coeficiente_transmicion;
 
-	tipo_material material; // Reflectante = 0 / Transparente = 1
+	bool es_reflectante; // Si es transparente, el coeficiente de transmicion es mayor a 0, no necesita un booleano
 
 public:
 	objeto(vector_3 posicion, 
 		color color_difuso, color color_especular, 
 		float coeficiente_ambiente, float coeficiente_difuso, float coeficiente_especular, float coeficiente_transmicion,
-		tipo_material material) :
+		bool es_reflectante) :
 		posicion(posicion), 
 		color_difuso(color_difuso), color_especular(color_especular),
 		coeficiente_ambiente(coeficiente_ambiente), coeficiente_difuso(coeficiente_difuso), coeficiente_especular(coeficiente_especular), coeficiente_transmicion(coeficiente_transmicion),
-		material(material) {}
+		es_reflectante(es_reflectante) {}
 
 	vector_3 get_posicion() const { return posicion; };
 
@@ -35,7 +35,7 @@ public:
 	float get_coeficiente_difuso() const { return coeficiente_difuso; };
 	float get_coeficiente_especular() const { return coeficiente_especular; };
 	float get_coeficiente_transmicion() const { return coeficiente_transmicion; };
-	tipo_material get_material() const { return material; };
+	bool get_es_reflectante() const { return es_reflectante; };
 
 	virtual bool interseca(rayo rayo_in, vector_3& punto_interseccion_out) = 0;
 	virtual vector_3 normal(vector_3 punto, rayo Rayo) = 0;

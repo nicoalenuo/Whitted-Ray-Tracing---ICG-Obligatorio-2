@@ -12,9 +12,9 @@ public:
 	esfera(vector_3 posicion,
 		color color_difuso, color color_especular,
 		float coeficiente_ambiente, float coeficiente_difuso, float coeficiente_especular, float coeficiente_transmicion,
-		tipo_material material,
-		float radio) : 
-		objeto(posicion, color_difuso, color_especular, coeficiente_ambiente, coeficiente_difuso, coeficiente_especular, coeficiente_transmicion, material),
+		bool es_reflectante,
+		float radio) :
+		objeto(posicion, color_difuso, color_especular, coeficiente_ambiente, coeficiente_difuso, coeficiente_especular, coeficiente_transmicion, es_reflectante),
 		radio(radio) {}
 
 	bool interseca(rayo rayo_in, vector_3& punto_interseccion_out);

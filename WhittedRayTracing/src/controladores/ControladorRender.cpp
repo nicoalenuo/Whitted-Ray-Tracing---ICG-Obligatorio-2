@@ -1,21 +1,33 @@
 #include "../../lib/controladores/ControladorRender.h"
 
-const color negro = { 0., 0., 0., 1. };
-const color blanco = { 1., 1., 1., 1. };
-const color gris = { 0.3, 0.3, 0.3, 1. }; //color luz ambiental?
+const color negro = { 0., 0., 0. };
+const color blanco = { 1., 1., 1. };
+const color gris = { 0.3, 0.3, 0.3 };
+const color ambiente = gris;
 
 color aux_color_x_escalar(color i, float k) {
-	return { i.r * k,  i.g * k, i.g * k, i.a };
+	return { 
+		i.r * k,  
+		i.g * k,
+		i.g * k 
+	};
 }
 
 color aux_color_x_color(color ik, color o) {
-	return { ik.r * o.r, ik.g * o.g, ik.b * o.b, ik.a * o.a };
+	return {
+		ik.r * o.r,
+		ik.g * o.g,
+		ik.b * o.b 
+	};
 }
 
 color aux_color_a_color(color ik, color o) {
-	return { ik.r + o.r, ik.g + o.g, ik.b + o.b, ik.a * o.a };
+	return { 
+		ik.r + o.r,
+		ik.g + o.g,
+		ik.b + o.b 
+	};
 }
-
 
 ControladorRender* ControladorRender::instancia = nullptr;
 
@@ -34,7 +46,13 @@ ControladorRender* ControladorRender::getInstance() {
 }
 
 color get_componente_ambiente(objeto* objeto) {
-	return aux_color_x_color(aux_color_x_escalar(gris, objeto->get_coeficiente_ambiente()), objeto->get_color_difuso());
+	color color_objeto = objeto->get_color_difuso();
+	float coeficiente_ambiente_objeto = objeto->get_coeficiente_ambiente();
+	return {
+		ambiente.r * color_objeto.r * coeficiente_ambiente_objeto,
+		ambiente.g * color_objeto.g * coeficiente_ambiente_objeto,
+		ambiente.b * color_objeto.b * coeficiente_ambiente_objeto
+	};
 }
 
 color get_componente_difuso(objeto* objeto, vector_3 N, vector_3 L_i) {
@@ -44,7 +62,8 @@ color get_componente_difuso(objeto* objeto, vector_3 N, vector_3 L_i) {
 			objeto->get_color_difuso(),      // O_d_alpha
 			objeto->get_coeficiente_difuso() // k_d
 		),
-		max(0.f, N.producto_interno(L_i)));
+		max(0.f, N.producto_interno(L_i))
+	);
 }
 
 vector_3 direccion_reflejada(vector_3 I, vector_3 N) {
@@ -54,12 +73,12 @@ vector_3 direccion_reflejada(vector_3 I, vector_3 N) {
 
 /*
 Se manejan dos situaciones:
-- Cuando el rayo está dentro del objeto
-- Cuando el rayo está afuera.
+- Cuando el rayo estï¿½ dentro del objeto
+- Cuando el rayo estï¿½ afuera.
 
-Si el rayo está afuera, necesitas hacer cosi positivo cosi = -N.I
+Si el rayo estï¿½ afuera, necesitas hacer cosi positivo cosi = -N.I
 
-Si el rayo está dentro, necesitas invertir los índices de refracción y negar la normal N
+Si el rayo estï¿½ dentro, necesitas invertir los ï¿½ndices de refracciï¿½n y negar la normal N
 */
 vector_3 direccion_refractada(vector_3 I, vector_3 N, float ior) {
 	float cosi = min(1.f, max(-1.f, I.producto_interno(N)));
@@ -108,18 +127,16 @@ color get_componente_luz(objeto* objeto, rayo Rayo, vector_3 punto_interseca, ve
 	for (size_t i = 0; i < luces.size(); i++) {
 
 		rayo rayo_sombra = rayo(punto_interseca + normal * EPSILON,
-			luces[i]->get_posicion() - (punto_interseca + normal * EPSILON)); //los algoritmos que se toman como base
-																		      //solo corrigen el punto de origen no la direcion
-																			  //habria que revisar
+			luces[i]->get_posicion() - (punto_interseca + normal * EPSILON));
 		
 		if (rayo_sombra.get_direccion().producto_interno(normal) > 0) {
 
 			distancia_de_la_luz = (luces[i]->get_posicion() - punto_interseca).norma();
 
 			//f_att_i
-			atenuacion = min(1 / (distancia_de_la_luz * distancia_de_la_luz), 1.f);
+			atenuacion = min(1 / (c1 + c2 * distancia_de_la_luz + c3 * distancia_de_la_luz * distancia_de_la_luz), 1.f);
 
-			// Para calcular S_i usar
+			// S_i
 			sombra = ControladorEscena::getInstance()->obtener_cantidad_de_luz_bloqueada(rayo_sombra, luces[i]->get_posicion());
 
 			//k_d * O_d_alpha * (N * L_i)
@@ -159,7 +176,7 @@ color ControladorRender::get_componente_refractivo(objeto* objeto, rayo rayo_t, 
 
 color ControladorRender::sombra_rr(objeto* objeto, rayo Rayo, vector_3 punto_interseca, vector_3 normal, int profundidad) {
 	
-	//color = término del ambiente;
+	//color = termino del ambiente;
 	color color = get_componente_ambiente(objeto);
 
 	//for (cada luz)
@@ -168,7 +185,7 @@ color ControladorRender::sombra_rr(objeto* objeto, rayo Rayo, vector_3 punto_int
 	
 	if (profundidad < PROFUNDIDAD_MAXIMA) {
 		//if (objeto es reflejante)
-		if (objeto->get_material() == REFLECTANTE) {
+		if (objeto->get_es_reflectante()) {
 			rayo rayo_r = rayo(punto_interseca + normal * EPSILON,
 				direccion_reflejada(Rayo.get_direccion(), normal)
 			);
@@ -178,8 +195,8 @@ color ControladorRender::sombra_rr(objeto* objeto, rayo Rayo, vector_3 punto_int
 			);
 		}
 		//if (objeto es transparente)
-		if (objeto->get_material() == TRANSPARENTE) {
-			//if (no ocurre la reflexión interna total) { -> coeficiente de refraccionn < 1
+		if (objeto->get_coeficiente_transmicion() > 0) {
+			//if (no ocurre la reflexiï¿½n interna total) { -> coeficiente de refraccionn < 1
 			rayo rayo_t = rayo(punto_interseca + normal * EPSILON,
 				direccion_refractada(Rayo.get_direccion(), normal, objeto->get_coeficiente_transmicion())
 			);
@@ -197,6 +214,7 @@ color ControladorRender::sombra_rr(objeto* objeto, rayo Rayo, vector_3 punto_int
 color ControladorRender::traza_rr(rayo Rayo, int profundidad) {
 	objeto* objeto;
 	vector_3 punto_interseca;
+
 	
 	if (ControladorEscena::getInstance()->obtener_objeto_intersecado_mas_cercano(Rayo, objeto, punto_interseca)) {
 		
