@@ -54,15 +54,15 @@ vector_3 malla_poligonal::normal(vector_3 punto, rayo Rayo) {
         poligono = poligonos[i];
         normal = poligono->normal();
 
-        vector_3 artista_1 = poligono->get_coord_2() - poligono->get_coord_1();
-        vector_3 artista_2 = poligono->get_coord_3() - poligono->get_coord_2();
-        vector_3 artista_3 = poligono->get_coord_1() - poligono->get_coord_3();
+        vector_3 arista_1 = poligono->get_coord_2() - poligono->get_coord_1();
+        vector_3 arista_2 = poligono->get_coord_3() - poligono->get_coord_2();
+        vector_3 arista_3 = poligono->get_coord_1() - poligono->get_coord_3();
 
         vector_3 C1 = punto - poligono->get_coord_1();
         vector_3 C2 = punto - poligono->get_coord_2();
         vector_3 C3 = punto - poligono->get_coord_3();
 
-        if ((artista_1 * C1).producto_interno(normal) >= 0 && (artista_2 * C2).producto_interno(normal) >= 0 && (artista_3 * C3).producto_interno(normal) >= 0) {
+        if ((arista_1 * C1).producto_interno(normal) >= 0 && (arista_2 * C2).producto_interno(normal) >= 0 && (arista_3 * C3).producto_interno(normal) >= 0) {
             if (Rayo.get_direccion().producto_interno(normal) <= 0)
                 return normal;
             else

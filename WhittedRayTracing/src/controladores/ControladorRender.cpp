@@ -9,7 +9,7 @@ color aux_color_x_escalar(color i, float k) {
 	return { 
 		i.r * k,  
 		i.g * k,
-		i.g * k 
+		i.b * k 
 	};
 }
 
@@ -230,7 +230,7 @@ color ControladorRender::traza_rr(rayo Rayo, int profundidad) {
 
 imagen* ControladorRender::whitted_ray_tracing() {
 	camara* camara = ControladorEscena::getInstance()->get_camara();
-	vector_3 origen = camara->getPosicionCamara(); //ojo de la camera
+	vector_3 origen = camara->getPosicionCamara(); //ojo de la camara
 	vector_3 plano = vector_3(0.f, 0.f, 0.f);
 
 	int imagen_width = camara->get_imagen_width();

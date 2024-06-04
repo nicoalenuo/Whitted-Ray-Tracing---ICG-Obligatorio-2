@@ -73,14 +73,14 @@
 		
 		<cilindros>
 			<cilindro>
-				<coeficiente_ambiente>0.6</coeficiente_ambiente>
-				<coeficiente_difuso>0.3</coeficiente_difuso>
-				<coeficiente_especular>0.1</coeficiente_especular>
-				<coeficiente_transmicion>0.8</coeficiente_transmicion>
-				<es_reflectante>true</es_reflectante>
+				<coeficiente_ambiente>1</coeficiente_ambiente>
+				<coeficiente_difuso>1</coeficiente_difuso>
+				<coeficiente_especular>1</coeficiente_especular>
+				<coeficiente_transmicion>0</coeficiente_transmicion>
+				<es_reflectante>false</es_reflectante>
 				<color_difuso>
 					<r>1</r>
-					<g>1</g>
+					<g>0</g>
 					<b>0</b>
 				</color_difuso>
 				<color_especular>
@@ -90,7 +90,7 @@
 				</color_especular>
 				<posicion>
 					<x>-300</x>
-					<y>0</y>
+					<y>100</y>
 					<z>200</z>
 				</posicion>
 				<radio>100</radio>
@@ -111,13 +111,11 @@
 					<r>1</r>
 					<g>1</g>
 					<b>1</b>
-					<a>1</a>
 				</color_difuso>
 				<color_especular>
 					<r>1</r>
 					<g>1</g>
 					<b>1</b>
-					<a>1</a>
 				</color_especular>
 				<triangulos>
 					<triangulo>
