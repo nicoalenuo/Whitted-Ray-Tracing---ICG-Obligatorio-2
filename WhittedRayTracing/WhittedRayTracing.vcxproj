@@ -140,6 +140,7 @@
   <ItemGroup>
     <ClCompile Include="..\main.cpp" />
     <ClCompile Include="src\camara.cpp" />
+    <ClCompile Include="src\color.cpp" />
     <ClCompile Include="src\controladores\ControladorEscena.cpp" />
     <ClCompile Include="src\controladores\ControladorArchivos.cpp" />
     <ClCompile Include="src\controladores\ControladorRender.cpp" />
@@ -161,6 +162,7 @@
     <ClInclude Include="constantes\estructuras.h" />
     <ClInclude Include="constantes\parametros.h" />
     <ClInclude Include="lib\camara.h" />
+    <ClInclude Include="lib\color.h" />
     <ClInclude Include="lib\controladores\ControladorEscena.h" />
     <ClInclude Include="lib\controladores\ControladorArchivos.h" />
     <ClInclude Include="lib\controladores\ControladorRender.h" />

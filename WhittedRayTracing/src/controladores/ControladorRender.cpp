@@ -1,33 +1,9 @@
 #include "../../lib/controladores/ControladorRender.h"
 
-const color negro = { 0., 0., 0. };
-const color blanco = { 1., 1., 1. };
-const color gris = { 0.3, 0.3, 0.3 };
-const color ambiente = gris;
-
-color aux_color_x_escalar(color i, float k) {
-	return { 
-		i.r * k,  
-		i.g * k,
-		i.b * k 
-	};
-}
-
-color aux_color_x_color(color ik, color o) {
-	return {
-		ik.r * o.r,
-		ik.g * o.g,
-		ik.b * o.b 
-	};
-}
-
-color aux_color_a_color(color ik, color o) {
-	return { 
-		ik.r + o.r,
-		ik.g + o.g,
-		ik.b + o.b 
-	};
-}
+color negro( 0., 0., 0. );
+color blanco( 1., 1., 1. );
+color gris( 0.3, 0.3, 0.3 );
+color ambiente = gris;
 
 ControladorRender* ControladorRender::instancia = nullptr;
 
@@ -46,30 +22,8 @@ ControladorRender* ControladorRender::getInstance() {
 }
 
 color get_componente_ambiente(objeto* objeto) {
-	color color_objeto = objeto->get_color_difuso();
-	float coeficiente_ambiente_objeto = objeto->get_coeficiente_ambiente();
-	return {
-		ambiente.r * color_objeto.r * coeficiente_ambiente_objeto,
-		ambiente.g * color_objeto.g * coeficiente_ambiente_objeto,
-		ambiente.b * color_objeto.b * coeficiente_ambiente_objeto
-	};
+	return ambiente * objeto->get_color_difuso() * objeto->get_coeficiente_ambiente();
 }
-
-color get_componente_difuso(objeto* objeto, vector_3 N, vector_3 L_i) {
-	//k_d * O_d_alpha * (N * L_i)
-	return aux_color_x_escalar(
-		aux_color_x_escalar(
-			objeto->get_color_difuso(),      // O_d_alpha
-			objeto->get_coeficiente_difuso() // k_d
-		),
-		max(0.f, N.producto_interno(L_i))
-	);
-}
-
-vector_3 direccion_reflejada(vector_3 I, vector_3 N) {
-	return I - N * 2  * (I.producto_interno(N));
-}
-
 
 /*
 Se manejan dos situaciones:
@@ -102,25 +56,27 @@ vector_3 direccion_refractada(vector_3 I, vector_3 N, float ior) {
 	return k < 0 ? vector_3(0.f, 0.f, 0.f) : (I * eta) + n * (eta * cosi - sqrtf(k));
 }
 
+color get_componente_difuso(objeto* objeto, vector_3 N, vector_3 L_i) {
+	//k_d * O_d_alpha * (N * L_i)
+	return 
+		objeto->get_color_difuso() *      // O_d_alpha
+		objeto->get_coeficiente_difuso() * // k_d
+		N.producto_interno(L_i);
+}
+
+vector_3 direccion_reflejada(vector_3 L, vector_3 N) {
+	return L - N * 2 * (L.producto_interno(N));
+}
+
 color get_componente_especular(objeto* objeto, vector_3 V, vector_3 N, vector_3 L) {
-	return objeto->get_color_especular();
-	return aux_color_x_escalar(
-		aux_color_x_escalar(
-			objeto->get_color_especular(),      //O_s_alpha
-			objeto->get_coeficiente_especular() //k_s
-		),
-		pow(direccion_reflejada(L, N).producto_interno(V), EXPONENTE_ESPECULAR) // (R_i * V)^n
-	);
+	return
+		objeto->get_color_especular() *    //O_s_alpha
+		objeto->get_coeficiente_especular() * //k_s
+		pow(direccion_reflejada(L, N).producto_interno(V), EXPONENTE_ESPECULAR); // (R_i * V)^n
 }
 
 color get_componente_luz(objeto* objeto, rayo Rayo, vector_3 punto_interseca, vector_3 normal) {
-	float distancia_de_la_luz = 0;
-	color color_especular = negro;
-	color color_especular_aux = negro;
-	float atenuacion = 0;
-	float sombra = 0;
-	color componente_difuso;
-	color componente_especular;
+	color color_resultado = negro;
 
 	vector<luz*> luces = ControladorEscena::getInstance()->get_luces();
 
@@ -131,84 +87,71 @@ color get_componente_luz(objeto* objeto, rayo Rayo, vector_3 punto_interseca, ve
 		
 		if (rayo_sombra.get_direccion().producto_interno(normal) > 0) {
 
-			distancia_de_la_luz = (luces[i]->get_posicion() - punto_interseca).norma();
+			float distancia_de_la_luz = (luces[i]->get_posicion() - punto_interseca).norma();
 
-			//f_att_i
-			atenuacion = min(1 / (c1 + c2 * distancia_de_la_luz + c3 * distancia_de_la_luz * distancia_de_la_luz), 1.f);
+			// f_att_i
+			float atenuacion = min(1 / (c1 + c2 * distancia_de_la_luz + c3 * distancia_de_la_luz * distancia_de_la_luz), 1.f);
 
 			// S_i
-			sombra = ControladorEscena::getInstance()->obtener_cantidad_de_luz_bloqueada(rayo_sombra, luces[i]->get_posicion());
+			float sombra = ControladorEscena::getInstance()->obtener_cantidad_de_luz_bloqueada(rayo_sombra, luces[i]->get_posicion());
 
-			//k_d * O_d_alpha * (N * L_i)
-			componente_difuso = get_componente_difuso(objeto, normal, rayo_sombra.get_direccion());
-			
-			//ks * O_s_alpha * (R_i * V)^n
-			componente_especular = get_componente_especular(objeto, -Rayo.get_direccion(), normal, -rayo_sombra.get_direccion());
+			// k_d * O_d_alpha * (N * L_i)
+			color componente_difuso = get_componente_difuso(objeto, normal, rayo_sombra.get_direccion());
 
-			color_especular_aux = aux_color_x_color(
-				aux_color_x_escalar(
-					luces[i]->get_color(), //I_p_alpha
-					sombra * atenuacion    //S_i * f_att_i
-				),
-				aux_color_a_color(componente_difuso, componente_especular)
-			);	
+			// ks * O_s_alpha * (R_i * V)^n
+			color componente_especular = get_componente_especular(objeto, -Rayo.get_direccion(), normal, rayo_sombra.get_direccion());
+
+			color_resultado = color_resultado +
+				luces[i]->get_color() * // I_p_alpha
+				sombra * atenuacion *   // S_i * f_att_i
+				(componente_difuso + componente_especular);
 		}
-		color_especular = aux_color_a_color(color_especular, color_especular_aux);
 	}
 
-	return color_especular;
+	return color_resultado;
 }
 
 color ControladorRender::get_componente_reflectivo(objeto* objeto, rayo rayo_r, int profundidad) {
-	return aux_color_x_escalar(
-		traza_rr(rayo_r, profundidad + 1),
-		objeto->get_coeficiente_especular()
-	);
+	return
+		traza_rr(rayo_r, profundidad + 1) *
+		objeto->get_coeficiente_especular();
 }
 
 color ControladorRender::get_componente_refractivo(objeto* objeto, rayo rayo_t, int profundidad) {
-	return aux_color_x_escalar(
-		traza_rr(rayo_t, profundidad + 1),
-		objeto->get_coeficiente_transmicion()
-	);
+	return
+		traza_rr(rayo_t, profundidad + 1) *
+		objeto->get_coeficiente_transmicion();
 }
 
 
 color ControladorRender::sombra_rr(objeto* objeto, rayo Rayo, vector_3 punto_interseca, vector_3 normal, int profundidad) {
-	
+
 	//color = termino del ambiente;
-	color color = get_componente_ambiente(objeto);
+	color color_resultado = get_componente_ambiente(objeto);
 
 	//for (cada luz)
-	color = aux_color_a_color(color, get_componente_luz(objeto, Rayo, punto_interseca, normal));
-
+	color_resultado = color_resultado + get_componente_luz(objeto, Rayo, punto_interseca, normal);
 	
 	if (profundidad < PROFUNDIDAD_MAXIMA) {
 		//if (objeto es reflejante)
 		if (objeto->get_es_reflectante()) {
-			rayo rayo_r = rayo(punto_interseca + normal * EPSILON,
-				direccion_reflejada(Rayo.get_direccion(), normal)
+			vector_3 dir_reflejada = direccion_reflejada(Rayo.get_direccion(), normal);
+			rayo rayo_r = rayo(punto_interseca + dir_reflejada * EPSILON,
+				dir_reflejada
 			);
-			color = aux_color_a_color(
-				color,
-				get_componente_reflectivo(objeto, rayo_r, profundidad)
-			);
+			color_resultado = color_resultado + get_componente_reflectivo(objeto, rayo_r, profundidad);
 		}
 		//if (objeto es transparente)
 		if (objeto->get_coeficiente_transmicion() > 0) {
 			//if (no ocurre la reflexi�n interna total) { -> coeficiente de refraccionn < 1
-			rayo rayo_t = rayo(punto_interseca + normal * EPSILON,
-				direccion_refractada(Rayo.get_direccion(), normal, objeto->get_coeficiente_transmicion())
+			vector_3 dir_refractada = direccion_refractada(Rayo.get_direccion(), normal, objeto->get_coeficiente_transmicion());
+			rayo rayo_t = rayo(punto_interseca + dir_refractada * EPSILON,
+				dir_refractada
 			);
-			color = aux_color_a_color(
-				color,
-				get_componente_refractivo(objeto, rayo_t, profundidad)
-			);
-
+			color_resultado = color_resultado + get_componente_refractivo(objeto, rayo_t, profundidad);
 		}
 	}
-
-	return color;
+	return color_resultado;
 }
 
 color ControladorRender::traza_rr(rayo Rayo, int profundidad) {
@@ -219,7 +162,6 @@ color ControladorRender::traza_rr(rayo Rayo, int profundidad) {
 	if (ControladorEscena::getInstance()->obtener_objeto_intersecado_mas_cercano(Rayo, objeto, punto_interseca)) {
 		
 		vector_3 normal = objeto->normal(punto_interseca, Rayo);
-		
 		return sombra_rr(objeto, Rayo, punto_interseca, normal, profundidad);
 	}
 	else {

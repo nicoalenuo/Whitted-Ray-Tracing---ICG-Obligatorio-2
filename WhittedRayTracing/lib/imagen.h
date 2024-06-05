@@ -6,6 +6,7 @@
 #include <iostream>
 
 #include "../constantes/constantes.h"
+#include "color.h"
 
 #include "FreeImage.h"
 

@@ -9,6 +9,7 @@
 #include "../imagen.h"
 #include "../rayo.h"
 #include "../vector_3.h"
+#include "../color.h"
 
 #include "./ControladorEscena.h"
 

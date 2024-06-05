@@ -4,6 +4,7 @@
 #define OBJETO_H
 
 #include "../vector_3.h"
+#include "../color.h"
 #include "../rayo.h"
 #include "../../constantes/estructuras.h"
 

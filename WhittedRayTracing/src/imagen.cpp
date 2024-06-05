@@ -12,20 +12,20 @@ imagen::imagen(int width, int height) {
 		for (int j = 0; j < width; j++) {
 			if (i < 200) {
 				if (j < 200) {
-					pixeles[i][j].r = 1;
-					pixeles[i][j].g = 0;
-					pixeles[i][j].b = 0;
+					pixeles[i][j].set_r(1);
+					pixeles[i][j].set_g(0);
+					pixeles[i][j].set_b(0);
 				}
 				else {
-					pixeles[i][j].r = 0;
-					pixeles[i][j].g = 1;
-					pixeles[i][j].b = 0;
+					pixeles[i][j].set_r(0);
+					pixeles[i][j].set_g(1);
+					pixeles[i][j].set_b(0);
 				}
 			}
 			else {
-				pixeles[i][j].r = 0;
-				pixeles[i][j].g = 0;
-				pixeles[i][j].b = 0;
+				pixeles[i][j].set_r(0);
+				pixeles[i][j].set_g(0);
+				pixeles[i][j].set_b(0);
 			}
 		}
 	}
@@ -46,6 +46,7 @@ FIBITMAP* imagen::obtener_bitmap() {
 
 	FIBITMAP* result = FreeImage_Allocate(imagen_width, imagen_height, 24);
 	RGBQUAD color;
+
 	if (!result) {
 		FreeImage_DeInitialise();
 		cerr << "Error al guardar memoria para el bitmap" << endl;
@@ -54,9 +55,9 @@ FIBITMAP* imagen::obtener_bitmap() {
 
 	for (int i = 0; i < imagen_height; i++) {
 		for (int j = 0; j < imagen_width; j++) {
-			max_intensity = max(max_intensity, this->pixeles[i][j].r);
-			max_intensity = max(max_intensity, this->pixeles[i][j].g);
-			max_intensity = max(max_intensity, this->pixeles[i][j].b);
+			max_intensity = max(max_intensity, this->pixeles[i][j].get_r());
+			max_intensity = max(max_intensity, this->pixeles[i][j].get_g());
+			max_intensity = max(max_intensity, this->pixeles[i][j].get_b());
 		}
 	}
 
@@ -64,16 +65,17 @@ FIBITMAP* imagen::obtener_bitmap() {
 		for (int j = 0; j < imagen_width; j++) {
 
 			if (max_intensity > 1) {
-				color.rgbRed = (BYTE)(pow(this->pixeles[i][j].r / max_intensity, 0.667) * 255.0);
-				color.rgbGreen = (BYTE)(pow(this->pixeles[i][j].g / max_intensity, 0.667) * 255.0);
-				color.rgbBlue = (BYTE)(pow(this->pixeles[i][j].b / max_intensity, 0.667) * 255.0);
+				color.rgbRed = (BYTE)(pow(this->pixeles[i][j].get_r() / max_intensity, 0.667) * 255.0);
+				color.rgbGreen = (BYTE)(pow(this->pixeles[i][j].get_g() / max_intensity, 0.667) * 255.0);
+				color.rgbBlue = (BYTE)(pow(this->pixeles[i][j].get_b() / max_intensity, 0.667) * 255.0);
 			}
 
 			else {
-				color.rgbRed = (BYTE)(this->pixeles[i][j].r * 255.0);
-				color.rgbGreen = (BYTE)(this->pixeles[i][j].g * 255.0);
-				color.rgbBlue = (BYTE)(this->pixeles[i][j].b * 255.0);
+				color.rgbRed = (BYTE)(this->pixeles[i][j].get_r() * 255.0);
+				color.rgbGreen = (BYTE)(this->pixeles[i][j].get_g() * 255.0);
+				color.rgbBlue = (BYTE)(this->pixeles[i][j].get_b() * 255.0);
 			}
+
 			FreeImage_SetPixelColor(result, j, i, &color);
 		}
 	}

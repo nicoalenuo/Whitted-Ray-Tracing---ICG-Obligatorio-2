@@ -21,7 +21,7 @@
 			<posicion>
 				<x>0</x>
 				<y>400</y>
-				<z>150</z>
+				<z>100</z>
 			</posicion>
 			<color>
 				<r>1</r>
@@ -32,8 +32,8 @@
 		<luz>
 			<posicion>
 				<x>0</x>
-				<y>600</y>
-				<z>250</z>
+				<y>400</y>
+				<z>400</z>
 			</posicion>
 			<color>
 				<r>1</r>
@@ -46,14 +46,15 @@
 	<objetos>
 		
 		<esferas>
+
 			<esfera>
-				<coeficiente_ambiente>0.6</coeficiente_ambiente>
-				<coeficiente_difuso>0.3</coeficiente_difuso>
+				<coeficiente_ambiente>1</coeficiente_ambiente>
+				<coeficiente_difuso>0.4</coeficiente_difuso>
 				<coeficiente_especular>1</coeficiente_especular>
 				<coeficiente_transmicion>0</coeficiente_transmicion>
 				<es_reflectante>true</es_reflectante>
 				<color_difuso>
-					<r>1</r>
+					<r>0</r>
 					<g>0</g>
 					<b>0</b>
 				</color_difuso>
@@ -63,7 +64,7 @@
 					<b>1</b>
 				</color_especular>
 				<posicion>
-					<x>0</x>
+					<x>300</x>
 					<y>100</y>
 					<z>200</z>
 				</posicion>

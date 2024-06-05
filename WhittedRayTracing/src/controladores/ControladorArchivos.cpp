@@ -78,8 +78,8 @@ vector<objeto*> ControladorArchivos::cargar_objetos(tinyxml2::XMLElement* config
 
 		objetos.push_back(new esfera(
 			vector_3(pos_x, pos_y, pos_z),
-			{ difuso_r, difuso_g, difuso_b },
-			{ especular_r, especular_g, especular_b },
+			color( difuso_r, difuso_g, difuso_b ),
+			color( especular_r, especular_g, especular_b ),
 			coeficiente_ambiente, coeficiente_difuso, coeficiente_especular, coeficiente_transmicion,
 			es_reflectante,
 			radio
@@ -116,8 +116,8 @@ vector<objeto*> ControladorArchivos::cargar_objetos(tinyxml2::XMLElement* config
 
 		objetos.push_back(new cilindro(
 			vector_3(pos_x, pos_y, pos_z),
-			{ difuso_r, difuso_g, difuso_b },
-			{ especular_r, especular_g, especular_b },
+			color( difuso_r, difuso_g, difuso_b ),
+			color( especular_r, especular_g, especular_b ),
 			coeficiente_ambiente, coeficiente_difuso, coeficiente_especular, coeficiente_transmicion,
 			es_reflectante,
 			radio,
@@ -171,8 +171,8 @@ vector<objeto*> ControladorArchivos::cargar_objetos(tinyxml2::XMLElement* config
 		
 		objetos.push_back(new malla_poligonal(
 			vector_3(),
-			{ difuso_r, difuso_g, difuso_b },
-			{ especular_r, especular_g, especular_b },
+			color( difuso_r, difuso_g, difuso_b ),
+			color( especular_r, especular_g, especular_b ),
 			coeficiente_ambiente, coeficiente_difuso, coeficiente_especular, coeficiente_transmicion,
 			es_reflectante,
 			poligonos
@@ -195,7 +195,7 @@ vector<luz*> ControladorArchivos::cargar_luces(tinyxml2::XMLElement* configuraci
 	}
 
 	float pos_x, pos_y, pos_z;
-	double color_r, color_g, color_b, color_a;
+	double color_r, color_g, color_b;
 
 	tinyxml2::XMLElement* luz_xml = luces_xml->FirstChildElement("luz");
 	while (luz_xml) {
@@ -208,8 +208,8 @@ vector<luz*> ControladorArchivos::cargar_luces(tinyxml2::XMLElement* configuraci
 		luz_xml->FirstChildElement("color")->FirstChildElement("b")->QueryDoubleText(&color_b);
 
 		luces.push_back(new luz(
-			vector_3(pos_x, pos_y, pos_z ),
-			{ color_r, color_g, color_b }
+			vector_3( pos_x, pos_y, pos_z ),
+			color( color_r, color_g, color_b )
 		));
 
 		luz_xml = luz_xml->NextSiblingElement("luz");

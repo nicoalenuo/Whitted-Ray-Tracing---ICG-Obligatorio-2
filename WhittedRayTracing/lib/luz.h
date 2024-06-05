@@ -4,6 +4,7 @@
 #define LUZ_H
 
 #include "./vector_3.h"
+#include "color.h"
 #include "../constantes/estructuras.h"
 
 class luz {
