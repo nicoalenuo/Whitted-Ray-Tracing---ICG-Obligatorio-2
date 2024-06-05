@@ -21,7 +21,7 @@
 			<posicion>
 				<x>0</x>
 				<y>400</y>
-				<z>100</z>
+				<z>12</z>
 			</posicion>
 			<color>
 				<r>1</r>
@@ -33,7 +33,7 @@
 			<posicion>
 				<x>0</x>
 				<y>400</y>
-				<z>400</z>
+				<z>512</z>
 			</posicion>
 			<color>
 				<r>1</r>
@@ -64,11 +64,11 @@
 					<b>1</b>
 				</color_especular>
 				<posicion>
-					<x>300</x>
-					<y>100</y>
-					<z>200</z>
+					<x>270</x>
+					<y>-160</y>
+					<z>400</z>
 				</posicion>
-				<radio>70</radio>
+				<radio>80</radio>
 			</esfera>
 
 			<esfera>
@@ -78,9 +78,9 @@
 				<coeficiente_transmicion>0.8</coeficiente_transmicion>
 				<es_reflectante>false</es_reflectante>
 				<color_difuso>
-					<r>0.9</r>
-					<g>0.5</g>
-					<b>0.5</b>
+					<r>1</r>
+					<g>0.3</g>
+					<b>0.3</b>
 				</color_difuso>
 				<color_especular>
 					<r>1</r>
@@ -88,11 +88,11 @@
 					<b>1</b>
 				</color_especular>
 				<posicion>
-					<x>0</x>
-					<y>100</y>
-					<z>200</z>
+					<x>-150</x>
+					<y>-110</y>
+					<z>500</z>
 				</posicion>
-				<radio>120</radio>
+				<radio>130</radio>
 			</esfera>
 		</esferas>
 		
@@ -100,7 +100,7 @@
 			<cilindro>
 				<coeficiente_ambiente>1</coeficiente_ambiente>
 				<coeficiente_difuso>1</coeficiente_difuso>
-				<coeficiente_especular>1</coeficiente_especular>
+				<coeficiente_especular>0.3</coeficiente_especular>
 				<coeficiente_transmicion>0</coeficiente_transmicion>
 				<es_reflectante>false</es_reflectante>
 				<color_difuso>
@@ -114,17 +114,133 @@
 					<b>1</b>
 				</color_especular>
 				<posicion>
-					<x>-300</x>
-					<y>-300</y>
-					<z>200</z>
+					<x>-40</x>
+					<y>-160</y>
+					<z>400</z>
 				</posicion>
-				<radio>90</radio>
-				<altura>180</altura>
+				<radio>80</radio>
+				<altura>160</altura>
 			</cilindro>
 		</cilindros>
 		
 		<mallas_poligonales>
 
+			<!-- Mesa-->
+			
+			<!-- Arriba Mesa-->
+			<malla_poligonal>
+				<coeficiente_ambiente>1</coeficiente_ambiente>
+				<coeficiente_difuso>1</coeficiente_difuso>
+				<coeficiente_especular>1</coeficiente_especular>
+				<coeficiente_transmicion>0</coeficiente_transmicion>
+				<es_reflectante>false</es_reflectante>
+				<color_difuso>
+					<r>1</r>
+					<g>1</g>
+					<b>1</b>
+				</color_difuso>
+				<color_especular>
+					<r>1</r>
+					<g>1</g>
+					<b>1</b>
+				</color_especular>
+				<triangulos>
+					<triangulo>
+						<coord>
+							<x>-400</x>
+							<y>-240</y>
+							<z>280</z>
+						</coord>
+						<coord>
+							<x>350</x>
+							<y>-240</y>
+							<z>620</z>
+						</coord>
+						<coord>
+							<x>-400</x>
+							<y>-240</y>
+							<z>620</z>
+						</coord>
+					</triangulo>
+					<triangulo>
+						<coord>
+							<x>-400</x>
+							<y>-240</y>
+							<z>280</z>
+						</coord>
+						<coord>
+							<x>350</x>
+							<y>-240</y>
+							<z>280</z>
+						</coord>
+						<coord>
+							<x>350</x>
+							<y>-240</y>
+							<z>620</z>
+						</coord>
+					</triangulo>
+				</triangulos>
+			</malla_poligonal>
+			<!-- Fin Arriba Mesa-->
+
+			<!-- Adelante Mesa-->
+			<malla_poligonal>
+				<coeficiente_ambiente>1</coeficiente_ambiente>
+				<coeficiente_difuso>1</coeficiente_difuso>
+				<coeficiente_especular>1</coeficiente_especular>
+				<coeficiente_transmicion>0</coeficiente_transmicion>
+				<es_reflectante>false</es_reflectante>
+				<color_difuso>
+					<r>1</r>
+					<g>1</g>
+					<b>1</b>
+				</color_difuso>
+				<color_especular>
+					<r>1</r>
+					<g>1</g>
+					<b>1</b>
+				</color_especular>
+				<triangulos>
+					<triangulo>
+						<coord>
+							<x>-400</x>
+							<y>-512</y>
+							<z>280</z>
+						</coord>
+						<coord>
+							<x>350</x>
+							<y>-240</y>
+							<z>280</z>
+						</coord>
+						<coord>
+							<x>-400</x>
+							<y>-240</y>
+							<z>280</z>
+						</coord>
+					</triangulo>
+					<triangulo>
+						<coord>
+							<x>-400</x>
+							<y>-512</y>
+							<z>280</z>
+						</coord>
+						<coord>
+							<x>350</x>
+							<y>-512</y>
+							<z>280</z>
+						</coord>
+						<coord>
+							<x>350</x>
+							<y>-240</y>
+							<z>280</z>
+						</coord>
+					</triangulo>
+				</triangulos>
+			</malla_poligonal>
+			<!-- Fin Adelante Mesa-->
+
+			<!-- Fin Mesa-->
+			
 			<!-- Suelo -->
 			<malla_poligonal>
 				<coeficiente_ambiente>1</coeficiente_ambiente>
@@ -294,13 +410,11 @@
 			</malla_poligonal>
 			<!-- Fin pared izquierda -->
 
-
-
 			<!-- Pared trasera -->
 			<malla_poligonal>
 				<coeficiente_ambiente>1</coeficiente_ambiente>
 				<coeficiente_difuso>1</coeficiente_difuso>
-				<coeficiente_especular>1</coeficiente_especular>
+				<coeficiente_especular>0</coeficiente_especular>
 				<coeficiente_transmicion>0</coeficiente_transmicion>
 				<es_reflectante>false</es_reflectante>
 				<color_difuso>
@@ -356,20 +470,18 @@
 			<malla_poligonal>
 				<coeficiente_ambiente>1</coeficiente_ambiente>
 				<coeficiente_difuso>1</coeficiente_difuso>
-				<coeficiente_especular>1</coeficiente_especular>
+				<coeficiente_especular>0</coeficiente_especular>
 				<coeficiente_transmicion>0</coeficiente_transmicion>
 				<es_reflectante>false</es_reflectante>
 				<color_difuso>
 					<r>1</r>
 					<g>1</g>
 					<b>1</b>
-					<a>1</a>
 				</color_difuso>
 				<color_especular>
 					<r>1</r>
 					<g>1</g>
 					<b>1</b>
-					<a>1</a>
 				</color_especular>
 				<triangulos>
 					<triangulo>

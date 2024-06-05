@@ -189,7 +189,7 @@ imagen* ControladorRender::whitted_ray_tracing() {
 				vector_3((float)(j - imagen_width / 2), (float)(i - imagen_height / 2), plano.get_z()) - origen);
 
 			img_resultado->set_pixel(i, j, traza_rr(Rayo, 1));
-			if (ANTIALIASING) {
+			if (!ANTIALIASING) {
 				rayo AntiAliasing1 = rayo(origen, vector_3(Rayo.get_direccion().get_x() - DESPLAZAMIENTO_ANTIALIASING, Rayo.get_direccion().get_y() - DESPLAZAMIENTO_ANTIALIASING, Rayo.get_direccion().get_z()));
 				rayo AntiAliasing2 = rayo(origen, vector_3(Rayo.get_direccion().get_x() - DESPLAZAMIENTO_ANTIALIASING, Rayo.get_direccion().get_y() + DESPLAZAMIENTO_ANTIALIASING, Rayo.get_direccion().get_z()));
 				rayo AntiAliasing3 = rayo(origen, vector_3(Rayo.get_direccion().get_x() + DESPLAZAMIENTO_ANTIALIASING, Rayo.get_direccion().get_y() - DESPLAZAMIENTO_ANTIALIASING, Rayo.get_direccion().get_z()));
