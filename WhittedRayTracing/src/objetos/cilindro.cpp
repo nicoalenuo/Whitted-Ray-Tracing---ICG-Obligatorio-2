@@ -19,17 +19,25 @@ bool cilindro::interseca(rayo rayo_in, vector_3& punto_interseccion_out) {
         (rayo_in.get_origen().get_z() - posicion.get_z()) -
         (radio * radio);
 
-    float delta = b * b - 4 * a * c;
-    if (delta < 0) {
+    float d = b * b - 4 * a * c;
+
+    if (d < 0) {
         return false;
     }
 
-    float t1 = (-b - sqrt(delta)) / (2 * a);
-    float t2 = (-b + sqrt(delta)) / (2 * a);
-    float t = (t1 < t2) ? t1 : t2;
+    float t1 = (-b - sqrt(d)) / (2 * a);
+    float t2 = (-b + sqrt(d)) / (2 * a);
 
+    if (t1 > t2) {
+        swap(t1, t2);
+    }
+
+    float t = t1;
     if (t < 0) {
-        return false;  
+        t = t2;
+        if (t < 0) {
+            return false;
+        }
     }
 
     float r = rayo_in.get_origen().get_y() + rayo_in.get_direccion().get_y() * t;

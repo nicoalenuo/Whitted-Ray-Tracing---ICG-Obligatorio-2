@@ -64,9 +64,9 @@ vector_3 malla_poligonal::normal(vector_3 punto, rayo Rayo) {
 
         if ((arista_1 * C1).producto_interno(normal) >= 0 && (arista_2 * C2).producto_interno(normal) >= 0 && (arista_3 * C3).producto_interno(normal) >= 0) {
             if (Rayo.get_direccion().producto_interno(normal) <= 0)
-                return normal.normalizado();
+                return normal;
             else
-                return -normal.normalizado();
+                return -normal;
         }
     }
 

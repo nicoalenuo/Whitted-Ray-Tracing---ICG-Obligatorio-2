@@ -1,6 +1,5 @@
 #include "../../lib/objetos/esfera.h"
 
-// https://math.stackexchange.com/questions/1939423/calculate-if-vector-intersects-sphere 
 bool esfera::interseca(rayo rayo_in, vector_3& punto_interseccion_out) {
 	vector_3 Q = rayo_in.get_origen() - posicion;
 	float a = rayo_in.get_direccion().producto_interno(rayo_in.get_direccion());
