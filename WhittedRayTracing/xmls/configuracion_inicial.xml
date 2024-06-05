@@ -68,7 +68,7 @@
 					<y>100</y>
 					<z>200</z>
 				</posicion>
-				<radio>100</radio>
+				<radio>70</radio>
 			</esfera>
 
 			<esfera>
@@ -78,9 +78,9 @@
 				<coeficiente_transmicion>0.8</coeficiente_transmicion>
 				<es_reflectante>false</es_reflectante>
 				<color_difuso>
-					<r>1</r>
-					<g>0</g>
-					<b>0</b>
+					<r>0.9</r>
+					<g>0.5</g>
+					<b>0.5</b>
 				</color_difuso>
 				<color_especular>
 					<r>1</r>
@@ -92,7 +92,7 @@
 					<y>100</y>
 					<z>200</z>
 				</posicion>
-				<radio>100</radio>
+				<radio>120</radio>
 			</esfera>
 		</esferas>
 		
@@ -104,8 +104,8 @@
 				<coeficiente_transmicion>0</coeficiente_transmicion>
 				<es_reflectante>false</es_reflectante>
 				<color_difuso>
-					<r>1</r>
-					<g>0</g>
+					<r>0</r>
+					<g>1</g>
 					<b>0</b>
 				</color_difuso>
 				<color_especular>
@@ -118,8 +118,8 @@
 					<y>-300</y>
 					<z>200</z>
 				</posicion>
-				<radio>100</radio>
-				<altura>200</altura>
+				<radio>90</radio>
+				<altura>180</altura>
 			</cilindro>
 		</cilindros>
 		
