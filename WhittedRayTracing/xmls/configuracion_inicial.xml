@@ -414,7 +414,7 @@
 			<malla_poligonal>
 				<coeficiente_ambiente>1</coeficiente_ambiente>
 				<coeficiente_difuso>1</coeficiente_difuso>
-				<coeficiente_especular>0</coeficiente_especular>
+				<coeficiente_especular>1</coeficiente_especular>
 				<coeficiente_transmicion>0</coeficiente_transmicion>
 				<es_reflectante>false</es_reflectante>
 				<color_difuso>
@@ -470,7 +470,7 @@
 			<malla_poligonal>
 				<coeficiente_ambiente>1</coeficiente_ambiente>
 				<coeficiente_difuso>1</coeficiente_difuso>
-				<coeficiente_especular>0</coeficiente_especular>
+				<coeficiente_especular>1</coeficiente_especular>
 				<coeficiente_transmicion>0</coeficiente_transmicion>
 				<es_reflectante>false</es_reflectante>
 				<color_difuso>

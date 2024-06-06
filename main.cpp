@@ -13,16 +13,39 @@ int main() {
 	ControladorEscena* controlador_escena = ControladorEscena::getInstance();
 	cout << "Cargados " << controlador_escena->get_objetos().size() << " objetos" << endl;
 	
-	cout << "Generando imagen...." << endl;
+	cout << endl;
+	
+	// Con antialiasing
+
+	cout << "Generando imagen con antialiasing...." << endl;
 	chrono::steady_clock::time_point comienzo_generacion_imagen = chrono::high_resolution_clock::now();
-	imagen* img_resultado = controlador_render->whitted_ray_tracing();
+	imagen* img_resultado = controlador_render->whitted_ray_tracing(CON_ANTIALIASING);
 	chrono::steady_clock::time_point fin_generacion_imagen = chrono::high_resolution_clock::now();
 
 	chrono::duration<double> tiempo_transcurrido_generacion_imagen = fin_generacion_imagen - comienzo_generacion_imagen;
 	cout << "Imagen generada en " << tiempo_transcurrido_generacion_imagen.count() << " segundos" << endl;
 
 	cout << "Guardando resultado..." << endl;
-	controlador_archivos->guardar_resultado(img_resultado);
+	controlador_archivos->guardar_resultado(img_resultado, CON_ANTIALIASING);
+
+	// -----------------
+
+	cout << endl;
+
+	//Sin antialiasing
+
+	cout << "Generando imagen sin antialiasing...." << endl;
+	comienzo_generacion_imagen = chrono::high_resolution_clock::now();
+	img_resultado = controlador_render->whitted_ray_tracing(SIN_ANTIALIASING);
+	fin_generacion_imagen = chrono::high_resolution_clock::now();
+
+	tiempo_transcurrido_generacion_imagen = fin_generacion_imagen - comienzo_generacion_imagen;
+	cout << "Imagen generada en " << tiempo_transcurrido_generacion_imagen.count() << " segundos" << endl;
+
+	cout << "Guardando resultado..." << endl;
+	controlador_archivos->guardar_resultado(img_resultado, SIN_ANTIALIASING);
+
+	// -----------------
 
 	delete img_resultado;
 	delete controlador_render;

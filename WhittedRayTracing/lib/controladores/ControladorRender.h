@@ -28,7 +28,7 @@ public:
 	static ControladorRender* getInstance();
 	~ControladorRender();
 
-	imagen* whitted_ray_tracing();
+	imagen* whitted_ray_tracing(tipo_imagen imagen);
 };
 
 #endif

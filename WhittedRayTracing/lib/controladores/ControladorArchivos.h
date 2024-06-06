@@ -25,6 +25,8 @@ private:
 	static ControladorArchivos* instancia;
 	ControladorArchivos();
 
+	string direccion_carpeta_resultados;
+
 	vector<objeto*> cargar_objetos(tinyxml2::XMLElement* configuracion);
 	vector<luz*> cargar_luces(tinyxml2::XMLElement* configuracion);
 	camara* cargar_camara(tinyxml2::XMLElement* configuracion);
@@ -33,7 +35,7 @@ public:
 	~ControladorArchivos();
 
 	void cargar_xml(vector<objeto*>& objetos_out, vector<luz*>& luces_out, camara*& camara_out);
-	void guardar_resultado(imagen* resultado); 
+	void guardar_resultado(imagen* resultado, tipo_imagen tipo); 
 };
 
 #endif

@@ -3,7 +3,19 @@
 ControladorArchivos* ControladorArchivos::instancia = nullptr;
 
 ControladorArchivos::ControladorArchivos() {
+	// Generar carpeta para guardar resultados
 
+	time_t in_time_t = chrono::system_clock::to_time_t(chrono::system_clock::now());
+	tm buf;
+	localtime_s(&buf, &in_time_t);
+	ostringstream oss;
+	oss << put_time(&buf, "%d %B - %H-%M-%S");
+	direccion_carpeta_resultados = DIRECCION_RESULTADOS + oss.str();
+
+	if (!filesystem::create_directory(direccion_carpeta_resultados)) {
+		cerr << "Error al crear el directorio: " << direccion_carpeta_resultados << endl;
+		exit(1);
+	}
 }
 
 ControladorArchivos* ControladorArchivos::getInstance() {
@@ -256,34 +268,30 @@ camara* ControladorArchivos::cargar_camara(tinyxml2::XMLElement* configuracion) 
 	);
 }
 
-void ControladorArchivos::guardar_resultado(imagen* img_resultado) {
-	FreeImage_Initialise();
-
-	time_t in_time_t = chrono::system_clock::to_time_t(chrono::system_clock::now());
-	tm buf;
-	localtime_s(&buf, &in_time_t);
-	ostringstream oss;
-	oss << put_time(&buf, "%d %B - %H-%M-%S");
-	string direccion = DIRECCION_RESULTADOS + oss.str();
-
-	// Crear el directorio
-	if (!filesystem::create_directory(direccion)) {
-		cerr << "Error al crear el directorio: " << direccion << endl;
-		exit(1);
+void ControladorArchivos::guardar_resultado(imagen* img_resultado, tipo_imagen tipo) {
+	string nombre_archivo;
+	switch (tipo) {
+	case CON_ANTIALIASING:
+		nombre_archivo = NOMBRE_RESULTADO_CON_ANTIALIASING;
+		break;
+	case SIN_ANTIALIASING:
+		nombre_archivo = NOMBRE_RESULTADO_SIN_ANTIALIASING;
+		break;
 	}
 
-	direccion += "\\resultado.png";
+	FreeImage_Initialise();
 
 	FIBITMAP* bitmap = img_resultado->obtener_bitmap();
-	if (!FreeImage_Save(FIF_PNG, bitmap, direccion.c_str(), 0)) {
+
+	if (!FreeImage_Save(FIF_PNG, bitmap, (direccion_carpeta_resultados + nombre_archivo).c_str(), 0)) {
 		FreeImage_Unload(bitmap);
 		FreeImage_DeInitialise();
-		cerr << "Error al guardar la imagen en: " << direccion << endl;
+		cerr << "Error al guardar la imagen en: " << direccion_carpeta_resultados + nombre_archivo << endl;
 		exit(1);
 	} else {
 		FreeImage_Unload(bitmap);
 		FreeImage_DeInitialise();
-		cout << "Resultado guardado en: " << direccion << endl;
+		cout << "Resultado guardado en: " << direccion_carpeta_resultados + nombre_archivo << endl;
 	}
 }
 
