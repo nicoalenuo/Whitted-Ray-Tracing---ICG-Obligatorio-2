@@ -30,26 +30,42 @@ Si el rayo est� afuera, necesitas hacer cosi positivo cosi = -N.I
 
 Si el rayo est� dentro, necesitas invertir los �ndices de refracci�n y negar la normal N
 */
-vector_3 direccion_refractada(vector_3 I, vector_3 N, float ior) {
-	float cosi = min(1.f, max(-1.f, I.producto_interno(N)));
+vector_3 direccion_refractada(rayo I, vector_3 N, float ior) {
+	float cosi = min(1.f, max(-1.f, I.get_direccion().producto_interno(N)));
 	
 	float etai = COEFICIENTE_REFRACCION_VACIO; // Medio antes de la refraccion
 	float etat = ior;						   // Medio despues de la refraccion
 	vector_3 n = N;
 	
-	if (cosi < 0) { //El rayo esta afuera
+	if (cosi <= 0) { //El rayo esta afuera
 		cosi = -cosi;
+		if (!I.esVaciaPilaRefraccion()) {
+			etai = I.obtenerCoefPilaRefrccion();
+		}
+		I.apilarCoefRefraccion(ior);
 	} else { //El rayo esta dentro
 		n = -n;
 		etai = ior;
-		etat = COEFICIENTE_REFRACCION_VACIO;
+		//etat = COEFICIENTE_REFRACCION_VACIO;
+		if (I.esVaciaPilaRefraccion()) {
+			etat = COEFICIENTE_REFRACCION_VACIO;
+		} else {
+			I.desapilarCoefRefraccion();
+			if (I.esVaciaPilaRefraccion()) {
+				etat = COEFICIENTE_REFRACCION_VACIO;
+			}
+			else {
+				etat = I.obtenerCoefPilaRefrccion();
+			}
+		}
+
 	}
 
 	float eta = etai / etat;
 
 	float k = 1 - eta * eta * (1 - cosi * cosi);
 
-	return k < 0 ? vector_3(0.f, 0.f, 0.f) : (I * eta) + n * (eta * cosi - sqrtf(k));
+	return k < 0 ? vector_3(0.f, 0.f, 0.f) : (I.get_direccion() * eta) + n * (eta * cosi - sqrtf(k));
 }
 
 vector_3 direccion_reflejada(vector_3 L, vector_3 N) {
@@ -89,8 +105,8 @@ color get_componente_luz(objeto* objeto, rayo Rayo, vector_3 punto_interseca, ve
 
 	for (size_t i = 0; i < luces.size(); i++) {
 
-		rayo rayo_sombra = rayo(punto_interseca + normal * EPSILON,
-			luces[i]->get_posicion() - (punto_interseca + normal * EPSILON));
+		rayo rayo_sombra = rayo(punto_interseca + (normal * EPSILON),
+			luces[i]->get_posicion() - (punto_interseca + (normal * EPSILON)));
 		
 		if (rayo_sombra.get_direccion().producto_interno(normal) > 0) {
 
@@ -141,7 +157,7 @@ color ControladorRender::sombra_rr(objeto* objeto, rayo Rayo, vector_3 punto_int
 	if (profundidad < PROFUNDIDAD_MAXIMA) {
 		//if (objeto es reflejante)
 		if (objeto->get_es_reflectante()) {
-			rayo rayo_r = rayo(punto_interseca + normal * EPSILON, 
+			rayo rayo_r = rayo(punto_interseca + (normal * EPSILON), 
 				direccion_reflejada(Rayo.get_direccion(), normal)
 			);
 			color_resultado = color_resultado + get_componente_reflectivo(objeto, rayo_r, profundidad);
@@ -149,8 +165,8 @@ color ControladorRender::sombra_rr(objeto* objeto, rayo Rayo, vector_3 punto_int
 		//if (objeto es transparente)
 		if (objeto->get_coeficiente_transmicion() > 0) {
 			//if (no ocurre la reflexi�n interna total) { -> coeficiente de refraccion < 1
-			rayo rayo_t = rayo(punto_interseca + normal * EPSILON,
-				direccion_refractada(Rayo.get_direccion(), normal, COEFICIENTE_REFRACCION_CUARZO_1) // Para probar
+			rayo rayo_t = rayo(punto_interseca - (normal * EPSILON),
+				direccion_refractada(Rayo, normal, objeto->get_coeficiente_refraccion()) // Para probar
 			);
 			color_resultado = color_resultado + get_componente_refractivo(objeto, rayo_t, profundidad);
 		}

@@ -52,6 +52,7 @@
 				<coeficiente_difuso>0.4</coeficiente_difuso>
 				<coeficiente_especular>1</coeficiente_especular>
 				<coeficiente_transmicion>0</coeficiente_transmicion>
+				<coeficiente_refraccion>0</coeficiente_refraccion>
 				<es_reflectante>true</es_reflectante>
 				<color_difuso>
 					<r>0</r>
@@ -76,6 +77,7 @@
 				<coeficiente_difuso>0.3</coeficiente_difuso>
 				<coeficiente_especular>1</coeficiente_especular>
 				<coeficiente_transmicion>0.8</coeficiente_transmicion>
+				<coeficiente_refraccion>1.5</coeficiente_refraccion>
 				<es_reflectante>false</es_reflectante>
 				<color_difuso>
 					<r>1</r>
@@ -102,6 +104,7 @@
 				<coeficiente_difuso>1</coeficiente_difuso>
 				<coeficiente_especular>0.3</coeficiente_especular>
 				<coeficiente_transmicion>0</coeficiente_transmicion>
+				<coeficiente_refraccion>1</coeficiente_refraccion>
 				<es_reflectante>false</es_reflectante>
 				<color_difuso>
 					<r>0</r>
@@ -133,6 +136,7 @@
 				<coeficiente_difuso>1</coeficiente_difuso>
 				<coeficiente_especular>1</coeficiente_especular>
 				<coeficiente_transmicion>0</coeficiente_transmicion>
+				<coeficiente_refraccion>1</coeficiente_refraccion>
 				<es_reflectante>false</es_reflectante>
 				<color_difuso>
 					<r>1</r>
@@ -189,6 +193,7 @@
 				<coeficiente_difuso>1</coeficiente_difuso>
 				<coeficiente_especular>1</coeficiente_especular>
 				<coeficiente_transmicion>0</coeficiente_transmicion>
+				<coeficiente_refraccion>1</coeficiente_refraccion>
 				<es_reflectante>false</es_reflectante>
 				<color_difuso>
 					<r>1</r>
@@ -247,6 +252,7 @@
 				<coeficiente_difuso>1</coeficiente_difuso>
 				<coeficiente_especular>1</coeficiente_especular>
 				<coeficiente_transmicion>0</coeficiente_transmicion>
+				<coeficiente_refraccion>1</coeficiente_refraccion>
 				<es_reflectante>false</es_reflectante>
 				<color_difuso>
 					<r>1</r>
@@ -303,6 +309,7 @@
 				<coeficiente_difuso>1</coeficiente_difuso>
 				<coeficiente_especular>1</coeficiente_especular>
 				<coeficiente_transmicion>0</coeficiente_transmicion>
+				<coeficiente_refraccion>1</coeficiente_refraccion>
 				<es_reflectante>false</es_reflectante>
 				<color_difuso>
 					<r>0</r>
@@ -360,6 +367,7 @@
 				<coeficiente_difuso>1</coeficiente_difuso>
 				<coeficiente_especular>1</coeficiente_especular>
 				<coeficiente_transmicion>0</coeficiente_transmicion>
+				<coeficiente_refraccion>1</coeficiente_refraccion>
 				<es_reflectante>false</es_reflectante>
 				<color_difuso>
 					<r>1</r>
@@ -416,6 +424,7 @@
 				<coeficiente_difuso>1</coeficiente_difuso>
 				<coeficiente_especular>1</coeficiente_especular>
 				<coeficiente_transmicion>0</coeficiente_transmicion>
+				<coeficiente_refraccion>1</coeficiente_refraccion>
 				<es_reflectante>false</es_reflectante>
 				<color_difuso>
 					<r>1</r>
@@ -472,6 +481,7 @@
 				<coeficiente_difuso>1</coeficiente_difuso>
 				<coeficiente_especular>1</coeficiente_especular>
 				<coeficiente_transmicion>0</coeficiente_transmicion>
+				<coeficiente_refraccion>1</coeficiente_refraccion>
 				<es_reflectante>false</es_reflectante>
 				<color_difuso>
 					<r>1</r>

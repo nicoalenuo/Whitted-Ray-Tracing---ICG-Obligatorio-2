@@ -60,7 +60,7 @@ vector<objeto*> ControladorArchivos::cargar_objetos(tinyxml2::XMLElement* config
 	float altura;
 	double difuso_r, difuso_g, difuso_b;
 	double especular_r, especular_g, especular_b;
-	float coeficiente_ambiente, coeficiente_difuso, coeficiente_especular, coeficiente_transmicion;
+	float coeficiente_ambiente, coeficiente_difuso, coeficiente_especular, coeficiente_transmicion, coeficiente_refraccion;
 	bool es_reflectante; 
 
 	//Carga de esferas 
@@ -84,6 +84,7 @@ vector<objeto*> ControladorArchivos::cargar_objetos(tinyxml2::XMLElement* config
 		esfera_xml->FirstChildElement("coeficiente_difuso")->QueryFloatText(&coeficiente_difuso);
 		esfera_xml->FirstChildElement("coeficiente_especular")->QueryFloatText(&coeficiente_especular);
 		esfera_xml->FirstChildElement("coeficiente_transmicion")->QueryFloatText(&coeficiente_transmicion);
+		esfera_xml->FirstChildElement("coeficiente_refraccion")->QueryFloatText(&coeficiente_refraccion);
 		esfera_xml->FirstChildElement("es_reflectante")->QueryBoolText(&es_reflectante);
 
 		esfera_xml->FirstChildElement("radio")->QueryFloatText(&radio);
@@ -92,7 +93,7 @@ vector<objeto*> ControladorArchivos::cargar_objetos(tinyxml2::XMLElement* config
 			vector_3(pos_x, pos_y, pos_z),
 			color( difuso_r, difuso_g, difuso_b ),
 			color( especular_r, especular_g, especular_b ),
-			coeficiente_ambiente, coeficiente_difuso, coeficiente_especular, coeficiente_transmicion,
+			coeficiente_ambiente, coeficiente_difuso, coeficiente_especular, coeficiente_transmicion, coeficiente_refraccion,
 			es_reflectante,
 			radio
 		));
@@ -121,6 +122,7 @@ vector<objeto*> ControladorArchivos::cargar_objetos(tinyxml2::XMLElement* config
 		cilindro_xml->FirstChildElement("coeficiente_difuso")->QueryFloatText(&coeficiente_difuso);
 		cilindro_xml->FirstChildElement("coeficiente_especular")->QueryFloatText(&coeficiente_especular);
 		cilindro_xml->FirstChildElement("coeficiente_transmicion")->QueryFloatText(&coeficiente_transmicion);
+		cilindro_xml->FirstChildElement("coeficiente_refraccion")->QueryFloatText(&coeficiente_refraccion);
 		cilindro_xml->FirstChildElement("es_reflectante")->QueryBoolText(&es_reflectante);
 
 		cilindro_xml->FirstChildElement("radio")->QueryFloatText(&radio);
@@ -130,7 +132,7 @@ vector<objeto*> ControladorArchivos::cargar_objetos(tinyxml2::XMLElement* config
 			vector_3(pos_x, pos_y, pos_z),
 			color( difuso_r, difuso_g, difuso_b ),
 			color( especular_r, especular_g, especular_b ),
-			coeficiente_ambiente, coeficiente_difuso, coeficiente_especular, coeficiente_transmicion,
+			coeficiente_ambiente, coeficiente_difuso, coeficiente_especular, coeficiente_transmicion, coeficiente_refraccion,
 			es_reflectante,
 			radio,
 			altura
@@ -156,6 +158,7 @@ vector<objeto*> ControladorArchivos::cargar_objetos(tinyxml2::XMLElement* config
 		malla_poligonal_xml->FirstChildElement("coeficiente_difuso")->QueryFloatText(&coeficiente_difuso);
 		malla_poligonal_xml->FirstChildElement("coeficiente_especular")->QueryFloatText(&coeficiente_especular);
 		malla_poligonal_xml->FirstChildElement("coeficiente_transmicion")->QueryFloatText(&coeficiente_transmicion);
+		malla_poligonal_xml->FirstChildElement("coeficiente_refraccion")->QueryFloatText(&coeficiente_refraccion);
 		malla_poligonal_xml->FirstChildElement("es_reflectante")->QueryBoolText(&es_reflectante);
 
 		vector<poligono_triangulo*> poligonos;
@@ -185,7 +188,7 @@ vector<objeto*> ControladorArchivos::cargar_objetos(tinyxml2::XMLElement* config
 			vector_3(),
 			color( difuso_r, difuso_g, difuso_b ),
 			color( especular_r, especular_g, especular_b ),
-			coeficiente_ambiente, coeficiente_difuso, coeficiente_especular, coeficiente_transmicion,
+			coeficiente_ambiente, coeficiente_difuso, coeficiente_especular, coeficiente_transmicion, coeficiente_refraccion,
 			es_reflectante,
 			poligonos
 		));
