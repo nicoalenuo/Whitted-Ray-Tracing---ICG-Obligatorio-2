@@ -274,12 +274,36 @@ camara* ControladorArchivos::cargar_camara(tinyxml2::XMLElement* configuracion) 
 void ControladorArchivos::guardar_resultado(imagen* img_resultado, tipo_imagen tipo) {
 	string nombre_archivo;
 	switch (tipo) {
-	case CON_ANTIALIASING:
-		nombre_archivo = NOMBRE_RESULTADO_CON_ANTIALIASING;
-		break;
-	case SIN_ANTIALIASING:
-		nombre_archivo = NOMBRE_RESULTADO_SIN_ANTIALIASING;
-		break;
+		case CON_ANTIALIASING:
+			nombre_archivo = NOMBRE_RESULTADO_CON_ANTIALIASING;
+			break;
+		case SIN_ANTIALIASING:
+			nombre_archivo = NOMBRE_RESULTADO_SIN_ANTIALIASING;
+			break;
+		case COEF_AMBIENTAL:
+			nombre_archivo = NOMBRE_RESULTADO_COEF_AMBIENTAL;
+			break;
+		case COEF_DIFUSO:
+			nombre_archivo = NOMBRE_RESULTADO_COEF_DIFUSO;
+			break;
+		case COEF_ESPECULAR:
+			nombre_archivo = NOMBRE_RESULTADO_COEF_ESPECULAR;
+			break;
+		case COEF_REFLEXIVO:
+			nombre_archivo = NOMBRE_RESULTADO_COEF_REFLEXIVO;
+			break;
+		case COEF_TRANSMISION:
+			nombre_archivo = NOMBRE_RESULTADO_COEF_TRANSMISION;
+			break;
+		case COLOR_AMBIENT3:
+			nombre_archivo = NOMBRE_RESULTADO_COLOR_AMBIENTE;
+			break;
+		case COLOR_DIFUSO:
+			nombre_archivo = NOMBRE_RESULTADO_COLOR_DIFUSO;
+			break;
+		case COLOR_ESPECULAR:
+			nombre_archivo = NOMBRE_RESULTADO_COLOR_ESPECULAR;
+			break;
 	}
 
 	FreeImage_Initialise();

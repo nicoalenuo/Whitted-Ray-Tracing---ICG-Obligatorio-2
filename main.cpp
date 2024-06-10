@@ -47,6 +47,44 @@ int main() {
 
 	// -----------------
 
+	//Resultados intermedios
+
+	cout << "Generando imagenes auxiliares para representar los componentes (sin antialiasing)" << endl;
+
+	img_resultado = controlador_render->whitted_ray_tracing(COEF_AMBIENTAL);
+	controlador_archivos->guardar_resultado(img_resultado, COEF_AMBIENTAL);
+	cout << "Coeficiente ambiental" << endl;
+
+	img_resultado = controlador_render->whitted_ray_tracing(COEF_DIFUSO);
+	controlador_archivos->guardar_resultado(img_resultado, COEF_DIFUSO);
+	cout << "Coeficiente difuso" << endl;
+
+	img_resultado = controlador_render->whitted_ray_tracing(COEF_ESPECULAR);
+	controlador_archivos->guardar_resultado(img_resultado, COEF_ESPECULAR);
+	cout << "Coeficiente especular" << endl;
+
+	img_resultado = controlador_render->whitted_ray_tracing(COEF_REFLEXIVO);
+	controlador_archivos->guardar_resultado(img_resultado, COEF_REFLEXIVO);
+	cout << "Coeficiente reflexion" << endl;
+
+	img_resultado = controlador_render->whitted_ray_tracing(COEF_TRANSMISION);
+	controlador_archivos->guardar_resultado(img_resultado, COEF_TRANSMISION);
+	cout << "Coeficiente transmision" << endl;
+
+	img_resultado = controlador_render->whitted_ray_tracing(COLOR_AMBIENT3);
+	controlador_archivos->guardar_resultado(img_resultado, COLOR_AMBIENT3);
+	cout << "Color ambiente" << endl;
+
+	img_resultado = controlador_render->whitted_ray_tracing(COLOR_DIFUSO);
+	controlador_archivos->guardar_resultado(img_resultado, COLOR_DIFUSO);
+	cout << "Color difuso" << endl;
+
+	img_resultado = controlador_render->whitted_ray_tracing(COLOR_ESPECULAR);
+	controlador_archivos->guardar_resultado(img_resultado, COLOR_ESPECULAR);
+	cout << "Color especular" << endl;
+
+	// -----------------
+
 	delete img_resultado;
 	delete controlador_render;
 	delete controlador_archivos;

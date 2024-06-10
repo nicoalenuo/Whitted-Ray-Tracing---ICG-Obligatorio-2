@@ -96,7 +96,7 @@ color get_componente_especular(objeto* objeto, vector_3 V, vector_3 N, vector_3 
 		pow(direccion_reflejada(L, N).producto_interno(V), EXPONENTE_ESPECULAR); // (R_i * V)^n
 }
 
-color get_componente_luz(objeto* objeto, rayo Rayo, vector_3 punto_interseca, vector_3 normal) {
+color get_componente_luz(objeto* objeto, rayo Rayo, vector_3 punto_interseca, vector_3 normal, tipo_imagen tipo) {
 	// Sumatoria de difuso y phong multiplicado por coeficientes de luz directa
 	
 	color color_resultado = COLOR_NEGRO;
@@ -118,11 +118,17 @@ color get_componente_luz(objeto* objeto, rayo Rayo, vector_3 punto_interseca, ve
 			// S_i
 			float sombra = ControladorEscena::getInstance()->obtener_cantidad_de_luz_bloqueada(rayo_sombra, luces[i]->get_posicion());
 
-			// k_d * O_d_alpha * (N * L_i)
-			color componente_difuso = get_componente_difuso(objeto, normal, rayo_sombra.get_direccion());
+			bool general = tipo == SIN_ANTIALIASING || tipo == CON_ANTIALIASING;
 
-			// k_s * O_s_alpha * (R_i * V)^n
-			color componente_especular = get_componente_especular(objeto, -Rayo.get_direccion(), normal, rayo_sombra.get_direccion());
+			color componente_difuso = COLOR_NEGRO;
+			if(general || tipo == COLOR_DIFUSO)
+				// k_d * O_d_alpha * (N * L_i)
+				componente_difuso = get_componente_difuso(objeto, normal, rayo_sombra.get_direccion());
+
+			color componente_especular = COLOR_NEGRO;
+			if(general || tipo == COLOR_ESPECULAR)
+				// k_s * O_s_alpha * (R_i * V)^n
+				componente_especular = get_componente_especular(objeto, -Rayo.get_direccion(), normal, rayo_sombra.get_direccion());
 
 			color_resultado = color_resultado +
 				luces[i]->get_color() * // I_p_alpha
@@ -134,33 +140,39 @@ color get_componente_luz(objeto* objeto, rayo Rayo, vector_3 punto_interseca, ve
 	return color_resultado;
 }
 
-color ControladorRender::get_componente_reflectivo(objeto* objeto, rayo rayo_r, int profundidad) {
+color ControladorRender::get_componente_reflectivo(objeto* objeto, rayo rayo_r, int profundidad, tipo_imagen tipo) {
 	return
-		traza_rr(rayo_r, profundidad + 1) *
+		traza_rr(rayo_r, profundidad + 1, tipo) *
 		objeto->get_coeficiente_especular();
 }
 
-color ControladorRender::get_componente_refractivo(objeto* objeto, rayo rayo_t, int profundidad) {
+color ControladorRender::get_componente_refractivo(objeto* objeto, rayo rayo_t, int profundidad, tipo_imagen tipo) {
 	return
-		traza_rr(rayo_t, profundidad + 1) *
+		traza_rr(rayo_t, profundidad + 1, tipo) *
 		objeto->get_coeficiente_transmicion();
 }
 
-color ControladorRender::sombra_rr(objeto* objeto, rayo Rayo, vector_3 punto_interseca, vector_3 normal, int profundidad) {
+color ControladorRender::sombra_rr(objeto* objeto, rayo Rayo, vector_3 punto_interseca, vector_3 normal, int profundidad, tipo_imagen tipo) {
+
+	color color_resultado = COLOR_NEGRO;
+
+	bool general = tipo == SIN_ANTIALIASING || tipo == CON_ANTIALIASING;
 
 	//color = termino del ambiente;
-	color color_resultado = get_componente_ambiente(objeto);
+	if(general || (tipo == COLOR_AMBIENT3))
+		color_resultado = get_componente_ambiente(objeto);
 
 	//for (cada luz)
-	color_resultado = color_resultado + get_componente_luz(objeto, Rayo, punto_interseca, normal);
+	if(general || tipo == COLOR_DIFUSO || tipo == COLOR_ESPECULAR)
+		color_resultado = color_resultado + get_componente_luz(objeto, Rayo, punto_interseca, normal, tipo);
 	
-	if (profundidad < PROFUNDIDAD_MAXIMA) {
+	if (general && profundidad < PROFUNDIDAD_MAXIMA) {
 		//if (objeto es reflejante)
 		if (objeto->get_es_reflectante()) {
-			rayo rayo_r = rayo(punto_interseca + (normal * EPSILON), 
+			rayo rayo_r = rayo(punto_interseca + (normal * EPSILON),
 				direccion_reflejada(Rayo.get_direccion(), normal)
 			);
-			color_resultado = color_resultado + get_componente_reflectivo(objeto, rayo_r, profundidad);
+			color_resultado = color_resultado + get_componente_reflectivo(objeto, rayo_r, profundidad, tipo);
 		}
 		//if (objeto es transparente)
 		if (objeto->get_coeficiente_transmicion() > 0) {
@@ -168,24 +180,57 @@ color ControladorRender::sombra_rr(objeto* objeto, rayo Rayo, vector_3 punto_int
 			rayo rayo_t = rayo(punto_interseca - (normal * EPSILON),
 				direccion_refractada(Rayo, normal, objeto->get_coeficiente_refraccion()) // Para probar
 			);
-			color_resultado = color_resultado + get_componente_refractivo(objeto, rayo_t, profundidad);
+			color_resultado = color_resultado + get_componente_refractivo(objeto, rayo_t, profundidad, tipo);
 		}
 	}
 
 	return color_resultado;
 }
 
-color ControladorRender::traza_rr(rayo Rayo, int profundidad) {
+color ControladorRender::traza_rr(rayo Rayo, int profundidad, tipo_imagen tipo) {
 	objeto* objeto;
 	vector_3 punto_interseca;
 
 	if (ControladorEscena::getInstance()->obtener_objeto_intersecado_mas_cercano(Rayo, objeto, punto_interseca)) {
 		vector_3 normal = objeto->normal(punto_interseca, Rayo);
-		return sombra_rr(objeto, Rayo, punto_interseca, normal, profundidad);
+		return sombra_rr(objeto, Rayo, punto_interseca, normal, profundidad, tipo);
 	}
 	else {
 		return COLOR_NEGRO;
 	}
+}
+
+color traza_rr_por_coeficiente(rayo Rayo, tipo_imagen tipo) {
+	color color_resultado;
+	objeto* objeto;
+	vector_3 punto_interseca;
+
+	float coeficiente = 0.f;
+
+	if (ControladorEscena::getInstance()->obtener_objeto_intersecado_mas_cercano(Rayo, objeto, punto_interseca)) {
+		switch (tipo){
+			case COEF_AMBIENTAL:
+				coeficiente = objeto->get_coeficiente_ambiente();
+				break;
+			case COEF_DIFUSO:
+				coeficiente = objeto->get_coeficiente_difuso();
+				break;
+			case COEF_ESPECULAR:
+				coeficiente = objeto->get_coeficiente_especular();
+				break;
+			case COEF_REFLEXIVO:
+				coeficiente = objeto->get_es_reflectante();
+				break;
+			case COEF_TRANSMISION:
+				coeficiente = objeto->get_coeficiente_transmicion();
+				break;
+		}
+		color_resultado = COLOR_BLANCO * coeficiente;
+	} else {
+		color_resultado = COLOR_NEGRO;
+	}
+
+	return color_resultado;
 }
 
 imagen* ControladorRender::whitted_ray_tracing(tipo_imagen tipo) {
@@ -204,24 +249,28 @@ imagen* ControladorRender::whitted_ray_tracing(tipo_imagen tipo) {
 			rayo Rayo = rayo(origen,
 				vector_3((float)(j - imagen_width / 2), (float)(i - imagen_height / 2), plano.get_z()) - origen);
 			
-			img_resultado->set_pixel(i, j, traza_rr(Rayo, 1));
-			
-			if (tipo == CON_ANTIALIASING) {
-				rayo AntiAliasing1 = rayo(origen, 
-					vector_3((float)(j - imagen_width / 2 + DESPLAZAMIENTO_ANTIALIASING), (float)(i - imagen_height / 2 + DESPLAZAMIENTO_ANTIALIASING), plano.get_z()) - origen);
-				rayo AntiAliasing2 = rayo(origen,
-					vector_3((float)(j - imagen_width / 2 + DESPLAZAMIENTO_ANTIALIASING), (float)(i - imagen_height / 2 - DESPLAZAMIENTO_ANTIALIASING), plano.get_z()) - origen);
-				rayo AntiAliasing3 = rayo(origen,
-					vector_3((float)(j - imagen_width / 2 - DESPLAZAMIENTO_ANTIALIASING), (float)(i - imagen_height / 2 + DESPLAZAMIENTO_ANTIALIASING), plano.get_z()) - origen);
-				rayo AntiAliasing4 = rayo(origen,
-					vector_3((float)(j - imagen_width / 2 - DESPLAZAMIENTO_ANTIALIASING), (float)(i - imagen_height / 2 - DESPLAZAMIENTO_ANTIALIASING), plano.get_z()) - origen);
-				
-				color AA1 = traza_rr(AntiAliasing1, 1);
-				color AA2 = traza_rr(AntiAliasing2, 1);
-				color AA3 = traza_rr(AntiAliasing3, 1);
-				color AA4 = traza_rr(AntiAliasing4, 1);
+			if (tipo == COEF_AMBIENTAL || tipo == COEF_DIFUSO || tipo == COEF_ESPECULAR || tipo == COEF_REFLEXIVO || tipo == COEF_TRANSMISION) {
+				img_resultado->set_pixel(i, j, traza_rr_por_coeficiente(Rayo, tipo));
+			} else {
+				img_resultado->set_pixel(i, j, traza_rr(Rayo, 1, tipo));
 
-				img_resultado->set_pixel(i, j, (img_resultado->get_pixeles()[i][j] + AA1 + AA2 + AA3 + AA4) / 5.0f );
+				if (tipo == CON_ANTIALIASING) {
+					rayo AntiAliasing1 = rayo(origen,
+						vector_3((float)(j - imagen_width / 2 + DESPLAZAMIENTO_ANTIALIASING), (float)(i - imagen_height / 2 + DESPLAZAMIENTO_ANTIALIASING), plano.get_z()) - origen);
+					rayo AntiAliasing2 = rayo(origen,
+						vector_3((float)(j - imagen_width / 2 + DESPLAZAMIENTO_ANTIALIASING), (float)(i - imagen_height / 2 - DESPLAZAMIENTO_ANTIALIASING), plano.get_z()) - origen);
+					rayo AntiAliasing3 = rayo(origen,
+						vector_3((float)(j - imagen_width / 2 - DESPLAZAMIENTO_ANTIALIASING), (float)(i - imagen_height / 2 + DESPLAZAMIENTO_ANTIALIASING), plano.get_z()) - origen);
+					rayo AntiAliasing4 = rayo(origen,
+						vector_3((float)(j - imagen_width / 2 - DESPLAZAMIENTO_ANTIALIASING), (float)(i - imagen_height / 2 - DESPLAZAMIENTO_ANTIALIASING), plano.get_z()) - origen);
+
+					color AA1 = traza_rr(AntiAliasing1, 1, tipo);
+					color AA2 = traza_rr(AntiAliasing2, 1, tipo);
+					color AA3 = traza_rr(AntiAliasing3, 1, tipo);
+					color AA4 = traza_rr(AntiAliasing4, 1, tipo);
+
+					img_resultado->set_pixel(i, j, (img_resultado->get_pixeles()[i][j] + AA1 + AA2 + AA3 + AA4) / 5.0f);
+				}
 			}
 		}
 	}
