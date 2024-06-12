@@ -74,7 +74,7 @@
 
 			<esfera>
 				<coeficiente_ambiente>0.5</coeficiente_ambiente>
-				<coeficiente_difuso>0.3</coeficiente_difuso>
+				<coeficiente_difuso>0.5</coeficiente_difuso>
 				<coeficiente_especular>1</coeficiente_especular>
 				<coeficiente_transmicion>0.8</coeficiente_transmicion>
 				<coeficiente_refraccion>1.5</coeficiente_refraccion>

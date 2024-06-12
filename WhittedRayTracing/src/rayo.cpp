@@ -8,8 +8,7 @@ rayo::rayo(vector_3 origen, vector_3 direccion) {
 }
 
 void rayo::apilarCoefRefraccion(float coeficiente) {
-	this->pila_refraccion[this->indice_pila] = coeficiente;
-	this->indice_pila++;
+	this->pila_refraccion[this->indice_pila++] = coeficiente;
 }
 
 void rayo::desapilarCoefRefraccion() {
@@ -25,19 +24,3 @@ bool rayo::esVaciaPilaRefraccion() {
 float rayo::obtenerCoefPilaRefrccion() {
 	return this->pila_refraccion[this->indice_pila];
 }
-
-/*void rayo::apilarCoefRefraccion(float coeficiente) {
-	this->pila_refraccion.push(coeficiente);
-}
-
-void rayo::desapilarCoefRefraccion() {
-	this->pila_refraccion.pop();
-}
-
-bool rayo::esVaciaPilaRefraccion() {
-	return this->pila_refraccion.empty();
-}
-
-float rayo::obtenerCoefPilaRefrccion() {
-	return this->pila_refraccion.top();
-}*/

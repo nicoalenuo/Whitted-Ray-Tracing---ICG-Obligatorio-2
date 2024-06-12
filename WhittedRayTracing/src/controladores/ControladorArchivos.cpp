@@ -6,10 +6,10 @@ ControladorArchivos::ControladorArchivos() {
 	// Generar carpeta para guardar resultados
 
 	time_t in_time_t = chrono::system_clock::to_time_t(chrono::system_clock::now());
-	tm buf;
-	localtime_s(&buf, &in_time_t);
+	tm buffer;
+	localtime_s(&buffer, &in_time_t);
 	ostringstream oss;
-	oss << put_time(&buf, "%d %B - %H-%M-%S");
+	oss << put_time(&buffer, "%d %B - %H-%M-%S");
 	direccion_carpeta_resultados = DIRECCION_RESULTADOS + oss.str();
 
 	if (!filesystem::create_directory(direccion_carpeta_resultados)) {
@@ -90,7 +90,7 @@ vector<objeto*> ControladorArchivos::cargar_objetos(tinyxml2::XMLElement* config
 		esfera_xml->FirstChildElement("radio")->QueryFloatText(&radio);
 
 		objetos.push_back(new esfera(
-			vector_3(pos_x, pos_y, pos_z),
+			vector_3( pos_x, pos_y, pos_z ),
 			color( difuso_r, difuso_g, difuso_b ),
 			color( especular_r, especular_g, especular_b ),
 			coeficiente_ambiente, coeficiente_difuso, coeficiente_especular, coeficiente_transmicion, coeficiente_refraccion,
@@ -129,7 +129,7 @@ vector<objeto*> ControladorArchivos::cargar_objetos(tinyxml2::XMLElement* config
 		cilindro_xml->FirstChildElement("altura")->QueryFloatText(&altura);
 
 		objetos.push_back(new cilindro(
-			vector_3(pos_x, pos_y, pos_z),
+			vector_3( pos_x, pos_y, pos_z ),
 			color( difuso_r, difuso_g, difuso_b ),
 			color( especular_r, especular_g, especular_b ),
 			coeficiente_ambiente, coeficiente_difuso, coeficiente_especular, coeficiente_transmicion, coeficiente_refraccion,
@@ -162,8 +162,7 @@ vector<objeto*> ControladorArchivos::cargar_objetos(tinyxml2::XMLElement* config
 		malla_poligonal_xml->FirstChildElement("es_reflectante")->QueryBoolText(&es_reflectante);
 
 		vector<poligono_triangulo*> poligonos;
-		tinyxml2::XMLElement* triangulos = malla_poligonal_xml->FirstChildElement("triangulos");
-		tinyxml2::XMLElement* triangulo = triangulos->FirstChildElement("triangulo");
+		tinyxml2::XMLElement* triangulo = malla_poligonal_xml->FirstChildElement("triangulos")->FirstChildElement("triangulo");
 		while (triangulo) {
 			vector<vector_3> coordenadas;
 			tinyxml2::XMLElement* coord = triangulo->FirstChildElement("coord");
@@ -295,7 +294,7 @@ void ControladorArchivos::guardar_resultado(imagen* img_resultado, tipo_imagen t
 		case COEF_TRANSMISION:
 			nombre_archivo = NOMBRE_RESULTADO_COEF_TRANSMISION;
 			break;
-		case COLOR_AMBIENT3:
+		case COLOR_AMBIENTE:
 			nombre_archivo = NOMBRE_RESULTADO_COLOR_AMBIENTE;
 			break;
 		case COLOR_DIFUSO:
@@ -310,15 +309,15 @@ void ControladorArchivos::guardar_resultado(imagen* img_resultado, tipo_imagen t
 
 	FIBITMAP* bitmap = img_resultado->obtener_bitmap();
 
-	if (!FreeImage_Save(FIF_PNG, bitmap, (direccion_carpeta_resultados + nombre_archivo).c_str(), 0)) {
+	if (FreeImage_Save(FIF_PNG, bitmap, (direccion_carpeta_resultados + nombre_archivo).c_str(), 0)) {
+		FreeImage_Unload(bitmap);
+		FreeImage_DeInitialise();
+		cout << "Resultado guardado en: " << direccion_carpeta_resultados + nombre_archivo << endl;
+	} else {
 		FreeImage_Unload(bitmap);
 		FreeImage_DeInitialise();
 		cerr << "Error al guardar la imagen en: " << direccion_carpeta_resultados + nombre_archivo << endl;
 		exit(1);
-	} else {
-		FreeImage_Unload(bitmap);
-		FreeImage_DeInitialise();
-		cout << "Resultado guardado en: " << direccion_carpeta_resultados + nombre_archivo << endl;
 	}
 }
 
