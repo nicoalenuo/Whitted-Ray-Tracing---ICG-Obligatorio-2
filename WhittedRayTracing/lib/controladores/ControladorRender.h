@@ -23,6 +23,7 @@ private:
 
 	color get_componente_reflectivo(objeto* objeto, rayo rayo_r, int profundidad, tipo_imagen tipo);
 	color get_componente_refractivo(objeto* objeto, rayo rayo_t, int profundidad, tipo_imagen tipo);
+	color get_componente_refractivo(objeto* objecto, rayo I, vector_3 punto_interseca, vector_3 N, int profundidad, tipo_imagen tipo);
 
 public:
 	static ControladorRender* getInstance();

@@ -48,8 +48,8 @@
 		<esferas>
 
 			<esfera>
-				<coeficiente_ambiente>1</coeficiente_ambiente>
-				<coeficiente_difuso>0.4</coeficiente_difuso>
+				<coeficiente_ambiente>0</coeficiente_ambiente>
+				<coeficiente_difuso>0</coeficiente_difuso>
 				<coeficiente_especular>1</coeficiente_especular>
 				<coeficiente_transmicion>0</coeficiente_transmicion>
 				<coeficiente_refraccion>0</coeficiente_refraccion>

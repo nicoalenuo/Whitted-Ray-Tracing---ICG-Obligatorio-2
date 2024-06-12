@@ -30,7 +30,7 @@ Si el rayo est� afuera, necesitas hacer cosi positivo cosi = -N.I
 
 Si el rayo est� dentro, necesitas invertir los �ndices de refracci�n y negar la normal N
 */
-vector_3 direccion_refractada(rayo I, vector_3 N, float ior) {
+/*tuple<vector_3, bool> direccion_refractada(rayo I, vector_3 N, float ior) {
 	float cosi = min(1.f, max(-1.f, I.get_direccion().producto_interno(N)));
 	
 	float etai = COEFICIENTE_REFRACCION_VACIO; // Medio antes de la refraccion
@@ -63,9 +63,67 @@ vector_3 direccion_refractada(rayo I, vector_3 N, float ior) {
 
 	float eta = etai / etat;
 
-	float k = 1 - eta * eta * (1 - cosi * cosi);
+	float k = 1 - (eta * eta) * (1 - (cosi * cosi));
 
-	return k < 0 ? vector_3(0.f, 0.f, 0.f) : (I.get_direccion() * eta) + n * (eta * cosi - sqrtf(k));
+	if (k < 0) //reflexion interna total
+		return { vector_3(0.f, 0.f, 0.f), false };
+	else
+		return {(I.get_direccion()* eta) + (n * (eta * cosi - sqrtf(k))), true};
+}*/
+
+color ControladorRender::get_componente_refractivo(objeto* objecto, rayo I, vector_3 punto_interseca, vector_3 N, int profundidad, tipo_imagen tipo) {
+	color refractive_color = COLOR_NEGRO;
+	vector_3 direccion_refract;
+	bool sigue;
+	
+	float cosi = min(1.f, max(-1.f, I.get_direccion().producto_interno(N)));
+	float etai = COEFICIENTE_REFRACCION_VACIO; // Medio antes de la refraccion
+	float etat = COEFICIENTE_REFRACCION_VACIO; // Medio despues de la refraccion
+
+	if (cosi <= 0) {//El rayo esta afuera
+		cosi = -cosi;
+		if (I.esVaciaPilaRefraccion()) {
+			etai = COEFICIENTE_REFRACCION_VACIO;
+		}
+		else {
+			etai = I.obtenerCoefPilaRefrccion();
+		}
+		etat = objecto->get_coeficiente_refraccion();
+		I.apilarCoefRefraccion(etat);
+	} else {//El rayo esta dentro
+		N = -N;
+		etai = objecto->get_coeficiente_refraccion();
+		if (I.esVaciaPilaRefraccion()) {
+			etat = COEFICIENTE_REFRACCION_VACIO;
+		}
+		else {
+			I.desapilarCoefRefraccion();
+			if (I.esVaciaPilaRefraccion()) {
+				etat = COEFICIENTE_REFRACCION_VACIO;
+			}
+			else {
+				etat = I.obtenerCoefPilaRefrccion();
+			}
+		}
+	}
+
+	float eta = etai / etat;
+	float cost = 1.f - pow(eta, 2.f) * (1.f - pow(cosi, 2.f));
+	if (cost >= 0.f) {
+		direccion_refract = (I.get_direccion() * eta) + (N * (eta * cosi - sqrtf(cost)));
+		sigue = true;
+	} else {
+		sigue = false;
+	}
+
+	if (sigue) {
+		rayo rayo_aux = rayo(punto_interseca - (N * EPSILON),
+			direccion_refract);
+		refractive_color = traza_rr(rayo_aux, profundidad + 1, tipo);
+		refractive_color = refractive_color * objecto->get_coeficiente_transmicion();
+	}
+
+	return refractive_color;
 }
 
 vector_3 direccion_reflejada(vector_3 L, vector_3 N) {
@@ -177,10 +235,19 @@ color ControladorRender::sombra_rr(objeto* objeto, rayo Rayo, vector_3 punto_int
 		//if (objeto es transparente)
 		if (objeto->get_coeficiente_transmicion() > 0) {
 			//if (no ocurre la reflexi�n interna total) { -> coeficiente de refraccion < 1
-			rayo rayo_t = rayo(punto_interseca - (normal * EPSILON),
-				direccion_refractada(Rayo, normal, objeto->get_coeficiente_refraccion()) // Para probar
-			);
-			color_resultado = color_resultado + get_componente_refractivo(objeto, rayo_t, profundidad, tipo);
+			/*vector_3 direccion_refract;
+			bool sigue;
+
+			tie(direccion_refract, sigue) = direccion_refractada(Rayo, normal, objeto->get_coeficiente_refraccion());
+			
+			if (sigue) {
+				rayo rayo_t = rayo(punto_interseca - (normal * EPSILON),
+					direccion_refract
+				);
+				color_resultado = color_resultado + get_componente_refractivo(objeto, rayo_t, profundidad, tipo);
+				//color_resultado = color_resultado + get_transmission_component(objeto, Rayo, punto_interseca, normal, profundidad, tipo);
+			}*/
+			color_resultado = color_resultado + get_componente_refractivo(objeto, Rayo, punto_interseca, normal, profundidad, tipo);
 		}
 	}
 
@@ -277,4 +344,3 @@ imagen* ControladorRender::whitted_ray_tracing(tipo_imagen tipo) {
 
 	return img_resultado;
 }
-
