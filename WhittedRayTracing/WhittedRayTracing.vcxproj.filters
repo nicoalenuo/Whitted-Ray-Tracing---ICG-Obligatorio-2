@@ -127,6 +127,8 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
+	<Xml Include="xmls\configuracion_2_esferas_paredes_espejadas.xml" />
+	<Xml Include="xmls\configuracion_inicial_paredes_espejadas.xml" />
     <Xml Include="xmls\configuracion_inicial.xml" />
   </ItemGroup>
 </Project>
