@@ -28,6 +28,8 @@ int main(int argc, char* args[]) {
 	cout << "Guardando resultado..." << endl;
 	controlador_archivos->guardar_resultado(img_resultado, SIN_ANTIALIASING);
 
+
+	delete(img_resultado);
 	// -----------------
 
 	cout << endl;
@@ -45,6 +47,7 @@ int main(int argc, char* args[]) {
 	cout << "Guardando resultado..." << endl;
 	controlador_archivos->guardar_resultado(img_resultado, CON_ANTIALIASING);
 
+	delete(img_resultado);
 	// -----------------
 
 	cout << endl;

@@ -80,9 +80,9 @@
 				<coeficiente_refraccion>1.5</coeficiente_refraccion>
 				<es_reflectante>false</es_reflectante>
 				<color_difuso>
-					<r>1</r>
-					<g>0.3</g>
-					<b>0.3</b>
+					<r>0.9</r>
+					<g>0.6</g>
+					<b>0.6</b>
 				</color_difuso>
 				<color_especular>
 					<r>1</r>
