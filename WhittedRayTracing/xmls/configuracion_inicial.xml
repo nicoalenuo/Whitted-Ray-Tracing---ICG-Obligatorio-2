@@ -103,7 +103,7 @@
 				<coeficiente_ambiente>1</coeficiente_ambiente>
 				<coeficiente_difuso>1</coeficiente_difuso>
 				<coeficiente_especular>0.3</coeficiente_especular>
-				<coeficiente_transmicion>0</coeficiente_transmicion>
+				<coeficiente_transmicion>0.1</coeficiente_transmicion>
 				<coeficiente_refraccion>1</coeficiente_refraccion>
 				<es_reflectante>false</es_reflectante>
 				<color_difuso>
@@ -119,7 +119,7 @@
 				<posicion>
 					<x>-40</x>
 					<y>-160</y>
-					<z>400</z>
+					<z>480</z>
 				</posicion>
 				<radio>80</radio>
 				<altura>160</altura>

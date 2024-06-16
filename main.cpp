@@ -62,11 +62,15 @@ int main(int argc, char* args[]) {
 	img_resultado = controlador_render->whitted_ray_tracing(COEF_AMBIENTAL);
 	controlador_archivos->guardar_resultado(img_resultado, COEF_AMBIENTAL);
 
+	delete(img_resultado);
+
 	cout << endl;
 
 	cout << "Coeficiente difuso..." << endl;
 	img_resultado = controlador_render->whitted_ray_tracing(COEF_DIFUSO);
 	controlador_archivos->guardar_resultado(img_resultado, COEF_DIFUSO);
+
+	delete(img_resultado);
 
 	cout << endl;
 
@@ -74,11 +78,15 @@ int main(int argc, char* args[]) {
 	img_resultado = controlador_render->whitted_ray_tracing(COEF_ESPECULAR);
 	controlador_archivos->guardar_resultado(img_resultado, COEF_ESPECULAR);
 
+	delete(img_resultado);
+
 	cout << endl;
 
 	cout << "Coeficiente reflexion..." << endl;
 	img_resultado = controlador_render->whitted_ray_tracing(COEF_REFLEXIVO);
 	controlador_archivos->guardar_resultado(img_resultado, COEF_REFLEXIVO);
+
+	delete(img_resultado);
 
 	cout << endl;
 	
@@ -86,17 +94,23 @@ int main(int argc, char* args[]) {
 	img_resultado = controlador_render->whitted_ray_tracing(COEF_TRANSMISION);
 	controlador_archivos->guardar_resultado(img_resultado, COEF_TRANSMISION);
 
+	delete(img_resultado);
+
 	cout << endl;
 	
 	cout << "Color ambiente..." << endl;
 	img_resultado = controlador_render->whitted_ray_tracing(COLOR_AMBIENTE);
 	controlador_archivos->guardar_resultado(img_resultado, COLOR_AMBIENTE);
 
+	delete(img_resultado);
+
 	cout << endl;
 
 	cout << "Color difuso..." << endl;
 	img_resultado = controlador_render->whitted_ray_tracing(COLOR_DIFUSO);
 	controlador_archivos->guardar_resultado(img_resultado, COLOR_DIFUSO);
+
+	delete(img_resultado);
 
 	cout << endl;
 
