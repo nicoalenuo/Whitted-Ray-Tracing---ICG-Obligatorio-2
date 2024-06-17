@@ -28,10 +28,10 @@ bool cilindro::interseca(rayo rayo_in, vector_3& punto_interseccion_out) {
     float t1 = (-b - sqrt(d)) / (2 * a);
     float t2 = (-b + sqrt(d)) / (2 * a);
 
-    float t = t1;
     if (t1 > t2) {
         swap(t1, t2);
     }
+    float t = t1;
     if (t < 0) {
         t = t2;
         if (t < 0) {

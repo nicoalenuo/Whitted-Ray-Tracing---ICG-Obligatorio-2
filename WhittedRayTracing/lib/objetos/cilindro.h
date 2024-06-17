@@ -16,6 +16,7 @@ public:
 		float radio, float altura) :
 		objeto(posicion, color_difuso, color_especular, coeficiente_ambiente, coeficiente_difuso, coeficiente_especular, coeficiente_transmicion, coeficiente_refraccion, es_reflectante),
 		radio(radio), altura(altura) {}
+	~cilindro() {}
 
 	bool interseca(rayo rayo_in, vector_3& punto_interseccion_out);
 	vector_3 normal(vector_3 punto, rayo Rayo);

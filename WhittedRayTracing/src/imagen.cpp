@@ -18,8 +18,6 @@ imagen::~imagen() {
 }
 
 FIBITMAP* imagen::obtener_bitmap() {
-	double intensidad_mas_alta = 0.0f;
-
 	FIBITMAP* bitmap_resultado = FreeImage_Allocate(imagen_width, imagen_height, 24);
 	
 	if (!bitmap_resultado) {
@@ -27,6 +25,8 @@ FIBITMAP* imagen::obtener_bitmap() {
 		cerr << "Error al guardar memoria para el bitmap" << endl;
 		exit(1);
 	}
+
+	double intensidad_mas_alta = -1.0f;
 
 	for (int i = 0; i < imagen_height; i++) {
 		for (int j = 0; j < imagen_width; j++) {

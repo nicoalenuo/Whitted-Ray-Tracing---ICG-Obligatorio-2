@@ -42,9 +42,6 @@
     <ClCompile Include="src\vector_3.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
-    <ClCompile Include="src\controladores\ControladorEscena.cpp">
-      <Filter>Archivos de origen</Filter>
-    </ClCompile>
     <ClCompile Include="src\tinyxml2.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
@@ -102,9 +99,6 @@
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
     <ClInclude Include="lib\vector_3.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\controladores\ControladorEscena.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
     <ClInclude Include="lib\tinyxml2.h">

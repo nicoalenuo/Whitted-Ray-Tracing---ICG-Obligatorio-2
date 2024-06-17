@@ -11,6 +11,7 @@ private:
 
 public:
 	poligono_triangulo(vector_3 coord_1, vector_3 coord_2, vector_3 coord_3) : coord_1(coord_1), coord_2(coord_2), coord_3(coord_3) {}
+	~poligono_triangulo() {}
 
 	vector_3 get_coord_1() const { return coord_1; };
 	vector_3 get_coord_2() const { return coord_2; };

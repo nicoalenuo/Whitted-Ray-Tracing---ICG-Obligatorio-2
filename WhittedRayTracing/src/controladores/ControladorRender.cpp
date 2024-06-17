@@ -8,6 +8,8 @@ color COLOR_ESCENA_AMBIENTE = COLOR_GRIS;
 ControladorRender* ControladorRender::instancia = nullptr;
 
 ControladorRender::ControladorRender() {
+	ControladorArchivos::getInstance()->cargar_xml(objetos, luces, Camara);
+
 	window = nullptr;
 	renderer = nullptr;
 	texture = nullptr;
@@ -15,18 +17,34 @@ ControladorRender::ControladorRender() {
 }
 
 ControladorRender::~ControladorRender() {
-	if (SDL_pixeles != nullptr) {
-		delete[] SDL_pixeles;
-	}
-	if (texture != nullptr) {
-		SDL_DestroyTexture(texture);
+	if (window != nullptr) {
+		SDL_DestroyWindow(window);
 	}
 	if (renderer != nullptr) {
 		SDL_DestroyRenderer(renderer);
 	}
-	if (window != nullptr) {
-		SDL_DestroyWindow(window);
+	if (texture != nullptr) {
+		SDL_DestroyTexture(texture);
 	}
+	if (SDL_pixeles != nullptr) {
+		delete[] SDL_pixeles;
+	}
+
+	for (size_t i = 0; i < objetos.size(); i++) {
+		//para que los poligonos de las mallas poligonales se borren correctamente
+		if (dynamic_cast<malla_poligonal*>(objetos[i]) != nullptr) {
+			delete dynamic_cast<malla_poligonal*>(objetos[i]);
+		}
+		else {
+			delete objetos[i];
+		}
+	}
+
+	for (size_t i = 0; i < luces.size(); i++) {
+		delete luces[i];
+	}
+
+	delete Camara;
 }
 
 ControladorRender* ControladorRender::getInstance() {
@@ -35,11 +53,48 @@ ControladorRender* ControladorRender::getInstance() {
 	return instancia;
 }
 
-vector_3 direccion_reflejada(vector_3 L, vector_3 N) {
+bool ControladorRender::obtener_objeto_intersecado_mas_cercano(rayo rayo_in, objeto*& objeto_out, vector_3& punto_interseccion_out) {
+	vector_3 punto_interseccion_aux;
+	float distancia_aux;
+	bool interseca = false;
+	objeto_out = nullptr;
+	punto_interseccion_out = vector_3();
+	for (size_t i = 0; i < objetos.size(); i++) {
+		if (objetos[i]->interseca(rayo_in, punto_interseccion_aux)) {
+			if (!interseca) {
+				interseca = true;
+				distancia_aux = (punto_interseccion_aux - rayo_in.get_origen()).norma();
+				punto_interseccion_out = punto_interseccion_aux;
+				objeto_out = objetos[i];
+			}
+			else if ((punto_interseccion_aux - rayo_in.get_origen()).norma() < distancia_aux) {
+				distancia_aux = (punto_interseccion_aux - rayo_in.get_origen()).norma();
+				punto_interseccion_out = punto_interseccion_aux;
+				objeto_out = objetos[i];
+			}
+		}
+	}
+
+	return interseca;
+}
+
+float ControladorRender::obtener_cantidad_de_luz_bloqueada(rayo Rayo, vector_3 punto_destino) {
+	vector_3 punto_interseccion_aux;
+	float luz_bloqueada = 1.f;
+	for (size_t i = 0; i < objetos.size(); i++) {
+		if (objetos[i]->interseca(Rayo, punto_interseccion_aux) && (Rayo.get_origen() - punto_interseccion_aux).norma() < (Rayo.get_origen() - punto_destino).norma()) {
+			luz_bloqueada *= objetos[i]->get_coeficiente_transmicion();
+		}
+	}
+
+	return luz_bloqueada;
+}
+
+vector_3 ControladorRender::direccion_reflejada(vector_3 L, vector_3 N) {
 	return L - N * 2 * (L.producto_interno(N));
 }
 
-color get_componente_ambiente(objeto* objeto) {
+color ControladorRender::get_componente_ambiente(objeto* objeto) {
 	// I_a_alpha * k_a * O_d_alpha
 	return
 		COLOR_ESCENA_AMBIENTE * // I_a_alpha
@@ -47,7 +102,7 @@ color get_componente_ambiente(objeto* objeto) {
 		objeto->get_coeficiente_ambiente(); //k_a
 }
 
-color get_componente_difuso(objeto* objeto, vector_3 N, vector_3 L_i) {
+color ControladorRender::get_componente_difuso(objeto* objeto, vector_3 N, vector_3 L_i) {
 	//k_d * O_d_alpha * (N * L_i)
 	return 
 		objeto->get_color_difuso() * // O_d_alpha
@@ -55,7 +110,7 @@ color get_componente_difuso(objeto* objeto, vector_3 N, vector_3 L_i) {
 		N.producto_interno(L_i); // (N * L_i)
 }
 
-color get_componente_especular(objeto* objeto, vector_3 V, vector_3 N, vector_3 L) {
+color ControladorRender::get_componente_especular(objeto* objeto, vector_3 V, vector_3 N, vector_3 L) {
 	// k_s * O_s_alpha * (R_i * V)^n
 	return
 		objeto->get_color_especular() * //O_s_alpha
@@ -63,7 +118,7 @@ color get_componente_especular(objeto* objeto, vector_3 V, vector_3 N, vector_3 
 		pow(direccion_reflejada(L, N).producto_interno(V), EXPONENTE_ESPECULAR); // (R_i * V)^n
 }
 
-color get_componente_luz(objeto* objeto_in, rayo Rayo, vector_3 punto_interseca, vector_3 normal, tipo_imagen tipo) {
+color ControladorRender::get_componente_luz(objeto* objeto_in, rayo Rayo, vector_3 punto_interseca, vector_3 normal, tipo_imagen tipo) {
 	// Sumatoria de difuso y phong multiplicado por coeficientes de luz directa
 
 	// Para calcular el color que obtiene una sombra al atravsar un objeto transparente
@@ -72,8 +127,6 @@ color get_componente_luz(objeto* objeto_in, rayo Rayo, vector_3 punto_interseca,
 	vector_3 punto_color_sombra;
 
 	color color_resultado = COLOR_NEGRO;
-
-	vector<luz*> luces = ControladorEscena::getInstance()->get_luces();
 
 	for (size_t i = 0; i < luces.size(); i++) {
 
@@ -88,7 +141,7 @@ color get_componente_luz(objeto* objeto_in, rayo Rayo, vector_3 punto_interseca,
 			float atenuacion = min(1 / (C1 + C2 * distancia_de_la_luz + C3 * distancia_de_la_luz * distancia_de_la_luz), 1.f);
 
 			// S_i
-			float sombra = ControladorEscena::getInstance()->obtener_cantidad_de_luz_bloqueada(rayo_sombra, luces[i]->get_posicion());
+			float sombra = obtener_cantidad_de_luz_bloqueada(rayo_sombra, luces[i]->get_posicion());
 
 			color componente_difuso = COLOR_NEGRO;
 			if (tipo == SIN_ANTIALIASING || tipo == CON_ANTIALIASING || tipo == COLOR_DIFUSO) {
@@ -103,9 +156,9 @@ color get_componente_luz(objeto* objeto_in, rayo Rayo, vector_3 punto_interseca,
 			}
 
 			color color_sombra = COLOR_BLANCO;
-			if (ControladorEscena::getInstance()->obtener_objeto_intersecado_mas_cercano(rayo_sombra, objeto_color_sombra, punto_color_sombra) &&
-				(punto_color_sombra - rayo_sombra.get_origen()).norma() < distancia_de_la_luz &&
-				objeto_color_sombra->get_coeficiente_transmicion() > 0) {
+			if (obtener_objeto_intersecado_mas_cercano(rayo_sombra, objeto_color_sombra, punto_color_sombra) && // Si el rayo interseca un objeto
+				objeto_color_sombra->get_coeficiente_transmicion() > 0 &&	// Y ese objeto es semi-transparente
+				(punto_color_sombra - rayo_sombra.get_origen()).norma() < distancia_de_la_luz) { // Y el objeto intersecado esta antes de la luz
 				color_sombra = objeto_color_sombra->get_color_difuso() * objeto_color_sombra->get_coeficiente_difuso();
 			}
 
@@ -122,54 +175,53 @@ color get_componente_luz(objeto* objeto_in, rayo Rayo, vector_3 punto_interseca,
 
 color ControladorRender::get_componente_reflectivo(objeto* objeto_in, rayo I, vector_3 punto_interseca, vector_3 N, int profundidad, tipo_imagen tipo) {
 	rayo rayo_r = rayo(punto_interseca + (N * EPSILON),
-		direccion_reflejada(I.get_direccion(), N)
-	);
+		direccion_reflejada(I.get_direccion(), N));
 	return
 		traza_rr(rayo_r, profundidad + 1, tipo) *
 		objeto_in->get_coeficiente_especular();
 }
 
 color ControladorRender::get_componente_refractivo(objeto* objeto_in, rayo I, vector_3 punto_interseca, vector_3 N, int profundidad, tipo_imagen tipo) {
-	color refractive_color = COLOR_NEGRO;
-	vector_3 direccion_refract;
+	color color_refraccion = COLOR_NEGRO;
+	vector_3 direccion_refraccion;
 	bool sigue;
 
 	float cosi = min(1.f, max(-1.f, I.get_direccion().producto_interno(N)));
-	float etai = COEFICIENTE_REFRACCION_VACIO; // Medio antes de la refraccion
-	float etat = COEFICIENTE_REFRACCION_VACIO; // Medio despues de la refraccion
+	float coeficiente_antes_de_refraccion = COEFICIENTE_REFRACCION_VACIO; // Medio antes de la refraccion
+	float coeficiente_luego_de_refraccion = COEFICIENTE_REFRACCION_VACIO; // Medio despues de la refraccion
 
 	if (cosi <= 0) {//El rayo esta afuera
 		cosi = -cosi;
 		if (I.esVaciaPilaRefraccion()) {
-			etai = COEFICIENTE_REFRACCION_VACIO;
+			coeficiente_antes_de_refraccion = COEFICIENTE_REFRACCION_VACIO;
 		}
 		else {
-			etai = I.obtenerCoefPilaRefrccion();
+			coeficiente_antes_de_refraccion = I.obtenerCoefPilaRefrccion();
 		}
-		etat = objeto_in->get_coeficiente_refraccion();
-		I.apilarCoefRefraccion(etat);
+		coeficiente_luego_de_refraccion = objeto_in->get_coeficiente_refraccion();
+		I.apilarCoefRefraccion(coeficiente_luego_de_refraccion);
 	}
 	else {//El rayo esta dentro
 		N = -N;
-		etai = objeto_in->get_coeficiente_refraccion();
+		coeficiente_antes_de_refraccion = objeto_in->get_coeficiente_refraccion();
 		if (I.esVaciaPilaRefraccion()) {
-			etat = COEFICIENTE_REFRACCION_VACIO;
+			coeficiente_luego_de_refraccion = COEFICIENTE_REFRACCION_VACIO;
 		}
 		else {
 			I.desapilarCoefRefraccion();
 			if (I.esVaciaPilaRefraccion()) {
-				etat = COEFICIENTE_REFRACCION_VACIO;
+				coeficiente_luego_de_refraccion = COEFICIENTE_REFRACCION_VACIO;
 			}
 			else {
-				etat = I.obtenerCoefPilaRefrccion();
+				coeficiente_luego_de_refraccion = I.obtenerCoefPilaRefrccion();
 			}
 		}
 	}
 
-	float eta = etai / etat;
+	float eta = coeficiente_antes_de_refraccion / coeficiente_luego_de_refraccion;
 	float cost = 1.f - pow(eta, 2.f) * (1.f - pow(cosi, 2.f));
 	if (cost >= 0.f) {
-		direccion_refract = (I.get_direccion() * eta) + (N * (eta * cosi - sqrtf(cost)));
+		direccion_refraccion = (I.get_direccion() * eta) + (N * (eta * cosi - sqrtf(cost)));
 		sigue = true;
 	}
 	else {
@@ -178,11 +230,11 @@ color ControladorRender::get_componente_refractivo(objeto* objeto_in, rayo I, ve
 
 	if (sigue) {
 		rayo rayo_aux = rayo(punto_interseca - (N * EPSILON),
-			direccion_refract);
-		refractive_color = traza_rr(rayo_aux, profundidad + 1, tipo) * objeto_in->get_coeficiente_transmicion();
+			direccion_refraccion);
+		color_refraccion = traza_rr(rayo_aux, profundidad + 1, tipo) * objeto_in->get_coeficiente_transmicion();
 	}
 
-	return refractive_color;
+	return color_refraccion;
 }
 
 color ControladorRender::sombra_rr(objeto* objeto, rayo Rayo, vector_3 punto_interseca, vector_3 normal, int profundidad, tipo_imagen tipo) {
@@ -215,7 +267,7 @@ color ControladorRender::traza_rr(rayo Rayo, int profundidad, tipo_imagen tipo) 
 	objeto* objeto;
 	vector_3 punto_interseca;
 
-	if (ControladorEscena::getInstance()->obtener_objeto_intersecado_mas_cercano(Rayo, objeto, punto_interseca)) {
+	if (obtener_objeto_intersecado_mas_cercano(Rayo, objeto, punto_interseca)) {
 		vector_3 normal = objeto->normal(punto_interseca, Rayo);
 		return sombra_rr(objeto, Rayo, punto_interseca, normal, profundidad, tipo);
 	}
@@ -224,14 +276,14 @@ color ControladorRender::traza_rr(rayo Rayo, int profundidad, tipo_imagen tipo) 
 	}
 }
 
-color traza_rr_por_coeficiente(rayo Rayo, tipo_imagen tipo) {
+color ControladorRender::traza_rr_por_coeficiente(rayo Rayo, tipo_imagen tipo) {
 	color color_resultado = COLOR_NEGRO;
 	objeto* objeto;
 	vector_3 punto_interseca;
 
 	float coeficiente = 0.f;
 
-	if (ControladorEscena::getInstance()->obtener_objeto_intersecado_mas_cercano(Rayo, objeto, punto_interseca)) {
+	if (obtener_objeto_intersecado_mas_cercano(Rayo, objeto, punto_interseca)) {
 		switch (tipo){
 			case COEF_AMBIENTAL:
 				coeficiente = objeto->get_coeficiente_ambiente();
@@ -256,12 +308,11 @@ color traza_rr_por_coeficiente(rayo Rayo, tipo_imagen tipo) {
 }
 
 imagen* ControladorRender::whitted_ray_tracing(tipo_imagen tipo) {
-	camara* camara = ControladorEscena::getInstance()->get_camara();
-	vector_3 origen = camara->getPosicionCamara(); //ojo de la camara
-	vector_3 plano = camara->getPosicionImagen(); // direccion de la camara
+	vector_3 origen = Camara->getPosicionCamara(); //ojo de la camara
+	vector_3 plano = Camara->getPosicionImagen(); // direccion de la camara
 
-	int imagen_width = camara->get_imagen_width();
-	int imagen_height = camara->get_imagen_height();
+	int imagen_width = Camara->get_imagen_width();
+	int imagen_height = Camara->get_imagen_height();
 
 	// Mostrar como se genera la imagen (solo en caso de imagen principal sin antialiasing)
 	if (tipo == SIN_ANTIALIASING) {
@@ -272,11 +323,9 @@ imagen* ControladorRender::whitted_ray_tracing(tipo_imagen tipo) {
 
 		window = SDL_CreateWindow(
 			"Imagen sin antialiasing",
-			SDL_WINDOWPOS_CENTERED,
-			SDL_WINDOWPOS_CENTERED,
-			imagen_width,
-			imagen_height,
-			SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN
+			SDL_WINDOWPOS_CENTERED,	SDL_WINDOWPOS_CENTERED,
+			imagen_width, imagen_height,
+			SDL_WINDOW_SHOWN
 		);
 
 		if (!window) {

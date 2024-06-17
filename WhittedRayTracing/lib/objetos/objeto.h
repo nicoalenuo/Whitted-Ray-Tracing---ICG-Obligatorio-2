@@ -13,6 +13,7 @@ protected:
 	vector_3 posicion;
 
 	color color_difuso, color_especular;
+
 	float coeficiente_ambiente, coeficiente_difuso, coeficiente_especular, coeficiente_transmicion, coeficiente_refraccion;
 
 	bool es_reflectante; // Si es transparente, el coeficiente de transmicion es mayor a 0, no necesita un booleano
@@ -26,6 +27,7 @@ public:
 		color_difuso(color_difuso), color_especular(color_especular),
 		coeficiente_ambiente(coeficiente_ambiente), coeficiente_difuso(coeficiente_difuso), coeficiente_especular(coeficiente_especular), coeficiente_transmicion(coeficiente_transmicion), coeficiente_refraccion(coeficiente_refraccion),
 		es_reflectante(es_reflectante) {}
+	~objeto() {};
 
 	vector_3 get_posicion() const { return posicion; };
 
